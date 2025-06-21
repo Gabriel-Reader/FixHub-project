@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de login</title>
+    <meta name="description" content="Tela de Login" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- <script src="{{ url_for('static', filename='script.js') }}"></script> -->
+</head>
+
+<body>
+
+    <div class="login-container">
+        <div class="cartao-login">
+            
+            <div class="cabecalho-login">
+                <h1>Bem-vindo de volta</h1>
+                <p>Entre com suas credenciais para acessar sua conta</p>
+            </div>
+
+                {% with mensagens = get_flashed_messages() %}
+                    {% if mensagens %}
+                        <ul>
+                            {% for mensagem in mensagens %}
+                                <li class="mensagem-validacao">{{ mensagem }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <form id="loginFormulario" class="login-formulario" method="POST">
+                    <div class="item-formulario">
+                        <label for="usuario">Nome de usuário</label>
+                        <div class="input-area">
+                            <input type="text" id="usuario" name="usuario" placeholder="Digite o seu nome de usuário" required>
+                        </div>
+                    </div>  
+
+                    <div class="item-formulario">
+                        <label for="senha">Senha</label>
+                        <div class="input-area">
+                            <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+                        </div>
+
+                    <button type="submit" class="bnt bnt-entrar">
+                        Entrar
+                    </button>
+
+                </form>
+
+                <div class="divider">
+                    <span>ou</span>
+                </div>
+
+                <button type="button" class="bnt bnt-criarConta" id="criarConta">
+                    Criar conta
+                </button>
+
+                </div>
+
+
+        </div>
+    </div>
+
+
+</body>
+</html>
