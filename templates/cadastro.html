@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tela de Cadastro" />
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='cadastro.css') }}"> -->
+    <link rel="stylesheet" href="cadastro.css" type="text/css">
+    <title>Tela de Cadastro</title>
+</head>
+
+<body>
+    <div class="cadastro-container">
+        <div class="cartao-cadastro">
+            
+            <div class="cabecalho-cartao">
+                <h1>Criar conta</h1>
+                <p>Preencha os campos abaixo para se cadastrar</p>
+            </div>
+
+                <form id="formCadastro" class="formulario-cadastro" autocomplete="off" method="POST">
+
+                    <div class="item-formulario">
+                        <label for="usuario">Nome de usuário</label>
+                        <input type="text" id="usuario" name="usuario" placeholder="ex: JoaoSilva25" required>
+                    </div>
+
+                    <div class="item-formulario">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" placeholder="seu-email@gmail.com" required>
+                    </div>
+
+                    <div class="item-formulario">
+                        <label for="senha">Senha</label>
+                        <input type="password" id="senha" name="senha" placeholder="••••••••" required>
+                    </div>
+
+                    <!-- Campos em Linha: Ala e Casa (CEU) -->
+                    <div class="itens-linha">
+
+                        <div class="item-formulario">
+                            <label for="quarto">Quarto</label>
+                            <input type="number" id="quarto" name="quarto" placeholder="ex: 102" required>
+                        </div>
+                        
+
+                        <div class="item-formulario">
+                            <label for="casa">Casa (CEU)</label>
+                            <select id="casa" name="casa" required>
+                                <option value="" disabled selected>Selecione</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-criarConta" id="criarConta">
+                        Criar conta
+                    </button>
+
+                </form>
+
+        </div>
+    </div>
+</body>
+
+</html>

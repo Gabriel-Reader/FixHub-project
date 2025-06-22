@@ -39,8 +39,9 @@ def tela_login():
 
     return render_template('index.html')
 
-
-
+@app.route('/cadastro', methods=['GET', 'POST'])
+def tela_cadastro():
+    return render_template('cadastro.html')
 
 
 
