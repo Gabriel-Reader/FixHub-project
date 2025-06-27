@@ -10,6 +10,7 @@
 </head>
 
 <body>
+
     <section id="sectionMorador" class="section-morador">
         <header>
             <h1 class="cabecalho-section"> Portal do Morador</h1>
@@ -28,7 +29,7 @@
 
                     <div class="item-formulario">
                         <label for="m_casa">Local da Manutenção</label>
-                        <select id="c_localManutencao" name="c_localManutencao" required>
+                        <select id="m_localManutencao" name="m_localManutencao" required>
                             <option value="" disabled selected>Selecione o local...</option>
                             <option value="Quarto">Quarto</option>
                             <option value="Banheiro">Banheiro</option>
@@ -84,14 +85,37 @@
             <h3 class="cabecalho-meusPedidos">Meus Pedidos</h3>
 
             <div id="cartaoPedidos" class="cartao-pedidos">
-                <p class="texto-pedidos">Nenhum pedido encontrado.</p>
+
+                <div class="cartao-pedido">
+                            <div class="pedido-tag-categoria">Categoria</div>
+                            <p class="pedido-descricao">Descrição</p>
+                            
+                                <h4 class="pedido-local-titulo">Quarto</h4>
+                                <p class="pedido-local-detalhe">Casa: 4 • Quarto: 101</p>
+
+                                <h4 class="pedido-local-titulo">Local</h4>
+                                <p class="pedido-local-detalhe">Banheiro</p>
+                            
+                            <hr class="pedido-divisor">
+                            
+                            <div class="pedido-rodape">
+                                <div class="pedido-status-container">
+                                    <span class="pedido-tag-status">Status</span>
+                                    <span class="pedido-data">Criado em: Data</span>
+                                </div>
+                                <span class="pedido-id">ID do Pedido: ID</span>
+                            </div>
+                        </div>
+
+
+                    <p class="texto-semPedidos">Nenhum pedido encontrado.</p>
+
             </div>
 
         </div>
-        
+
     </section>
-    
-        
+
 </body>
 
 </html>
