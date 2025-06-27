@@ -109,7 +109,6 @@ input[type=number]::-webkit-inner-spin-button {
     font-size: 1rem;
     padding: 1rem;
     border: none;
-    border-radius: 0.5rem;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
