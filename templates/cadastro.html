@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Tela de Cadastro" />
+    <meta name="c_viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="c_description" content="Tela de Cadastro" />
     <!-- <link rel="stylesheet" href="{{ url_for('static', filename='cadastro.css') }}"> -->
     <link rel="stylesheet" href="cadastro.css" type="text/css">
     <title>Tela de Cadastro</title>
@@ -21,32 +21,32 @@
                 <form id="formCadastro" class="formulario-cadastro" autocomplete="off" method="POST">
 
                     <div class="item-formulario">
-                        <label for="usuario">Nome de usuário</label>
-                        <input type="text" id="usuario" name="usuario" placeholder="ex: JoaoSilva25" required>
+                        <label for="c_usuario">Nome de usuário</label>
+                        <input type="text" id="c_usuario" name="c_usuario" placeholder="ex: JoaoSilva25" required>
                     </div>
 
                     <div class="item-formulario">
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email" placeholder="seu-email@gmail.com" required>
+                        <label for="c_email">E-mail</label>
+                        <input type="email" id="c_email" name="c_email" placeholder="seu-email@gmail.com" required>
                     </div>
 
                     <div class="item-formulario">
-                        <label for="senha">Senha</label>
-                        <input type="password" id="senha" name="senha" placeholder="••••••••" required>
+                        <label for="c_senha">Senha</label>
+                        <input type="password" id="c_senha" name="c_senha" placeholder="••••••••" required>
                     </div>
 
                     <!-- Campos em Linha: Ala e Casa (CEU) -->
                     <div class="itens-linha">
 
                         <div class="item-formulario">
-                            <label for="quarto">Quarto</label>
-                            <input type="number" id="quarto" name="quarto" placeholder="ex: 102" required>
+                            <label for="c_quarto">Quarto</label>
+                            <input type="number" id="c_quarto" name="c_quarto" placeholder="ex: 102" required>
                         </div>
                         
 
                         <div class="item-formulario">
-                            <label for="casa">Casa (CEU)</label>
-                            <select id="casa" name="casa" required>
+                            <label for="c_casa">Casa (CEU)</label>
+                            <select id="c_casa" name="c_casa" required>
                                 <option value="" disabled selected>Selecione</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -57,7 +57,7 @@
 
                     </div>
 
-                    <button type="submit" class="btn btn-criarConta" id="criarConta">
+                    <button type="submit" class="btn btn-criarConta" id="c_criarConta">
                         Criar conta
                     </button>
 

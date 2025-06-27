@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tela de Cadastro" />
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='painelMorador.css') }}"> -->
+    <link rel="stylesheet" href="painelMorador.css" type="text/css">
+    <title>Portal do Morador</title>
+</head>
+
+<body>
+    <section id="sectionMorador" class="section-morador">
+        <header>
+            <h1 class="cabecalho-section"> Portal do Morador</h1>
+        </header>
+
+        <div class="cartao-morador">
+            <h3>Criar novo pedido</h3>
+
+            <form id="formMorador" class="formulario-morador" autocomplete="off" method="POST">
+
+                <div class="itens-linha">
+                    <div class="item-formulario">
+                        <label for="m_casa">Casa (CEU)</label>
+                        <input type="text" id="m_casa" name="m_casa" placeholder="ex: CEU 4" maxlength="10" required>
+                    </div>
+
+                    <div class="item-formulario">
+                        <label for="m_casa">Local da Manutenção</label>
+                        <select id="c_localManutencao" name="c_localManutencao" required>
+                            <option value="" disabled selected>Selecione o local...</option>
+                            <option value="Quarto">Quarto</option>
+                            <option value="Banheiro">Banheiro</option>
+                            <option value="Area em comum">Área em comum</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="item-formulario">
+                    <label for="m_categoria">Categoria</label>
+                    <select id="m_categoria" name="m_categoria" required>
+                        <option value="" disabled selected>Selecione a categoria...</option>
+                        <option value="Jardinagem">Jardinagem</option>
+                        <option value="Manutencao Hidraulica">Manutenção Hidráulica</option>
+                        <option value="Manutencao Eletrica">Manutenção Elétrica</option>
+                        <option value="Marcenaria / Mobiliario">Marcenaria / Mobiliário</option>
+                        <option value="Estrutural">Estrutural (parede, teto, piso)</option>
+                        <option value="Limpeza Pesada">Limpeza Pesada</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+
+                <div class="itens-linha">
+                    <div class="item-formulario">
+                        <label for="m_quarto">Quarto (se aplicável)</label>
+                        <input type="number" id="m_quarto" name="m_quarto" placeholder="ex: 205">
+                    </div>
+
+                    <div class="item-formulario">
+                        <label for="m_ala">Ala (se aplicável)</label>
+                        <input type="number" id="m_ala" name="m_ala" placeholder="ex: 2">
+                    </div>
+                </div>
+
+                <div class="item-formulario">
+                    <label for="m_descricao" class="form-label">Descrição do Problema</label>
+                    <textarea id="m_descricao" rows="3" class="form-textarea" placeholder="Ex: Chuveiro do último box do banheiro não está esquentando." required></textarea>
+                </div>
+
+                <div class="div-imagem">
+                    <label for="m_imagem">Foto do problema (Opcional)</label>
+                    <input type="file" name="m_imagem" id="m_imagem" class="btn-imagem" accept="image/*">
+                </div>
+                
+                <button type="submit" class="btn btn-enviarPedido" id="m_enviarPedido">
+                    Enviar pedido
+                </button>
+
+            </form>
+        </div>
+
+        <div class="container-pedidos">
+            <h3 class="cabecalho-meusPedidos">Meus Pedidos</h3>
+
+            <div id="cartaoPedidos" class="cartao-pedidos">
+                <p class="texto-pedidos">Nenhum pedido encontrado.</p>
+            </div>
+
+        </div>
+        
+    </section>
+    
+        
+</body>
+
+</html>
