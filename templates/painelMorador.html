@@ -24,7 +24,17 @@
                 <div class="itens-linha">
                     <div class="item-formulario">
                         <label for="m_casa">Casa (CEU)</label>
-                        <input type="text" id="m_casa" name="m_casa" placeholder="ex: CEU 4" maxlength="10" required>
+                        <!-- <input type="text" id="m_casa" name="m_casa" placeholder="ex: CEU 4" maxlength="10" required> -->
+                        <select id="m_casa" name="m_casa" required>
+                        <option value="" disabled selected>Selecione a casa...</option>
+                        <option value="1">CEU 1</option>
+                        <option value="2">CEU 2</option>
+                        <option value="3">CEU 3</option>
+                        <option value="4">CEU 4</option>
+                        <option value="126">CEU 126</option>
+                        <option value="145">CEU 145</option>
+                        <option value="Hotel">CEU Hotel</option>
+                    </select>
                     </div>
 
                     <div class="item-formulario">
@@ -34,6 +44,7 @@
                             <option value="Quarto">Quarto</option>
                             <option value="Banheiro">Banheiro</option>
                             <option value="Area em comum">Área em comum</option>
+                            <option value="Outros">Outros</option>
                         </select>
                     </div>
                 </div>
@@ -42,12 +53,12 @@
                     <label for="m_categoria">Categoria</label>
                     <select id="m_categoria" name="m_categoria" required>
                         <option value="" disabled selected>Selecione a categoria...</option>
+                        <option value="Almoxarifado">Almoxarifado</option>
                         <option value="Jardinagem">Jardinagem</option>
-                        <option value="Manutencao Hidraulica">Manutenção Hidráulica</option>
-                        <option value="Manutencao Eletrica">Manutenção Elétrica</option>
-                        <option value="Marcenaria / Mobiliario">Marcenaria / Mobiliário</option>
-                        <option value="Estrutural">Estrutural (parede, teto, piso)</option>
-                        <option value="Limpeza Pesada">Limpeza Pesada</option>
+                        <option value="Logistica e carregadores">Logística e carregadores</option>
+                        <option value="PROINFRA Manutencao">PROINFRA Manutenção</option>
+                        <option value="Tecnologia e Rede">Tecnologia e Rede</option>
+                        <option value="Zeladoria">Zeladoria</option>
                         <option value="Outros">Outros</option>
                     </select>
                 </div>
@@ -84,31 +95,39 @@
         <div class="container-pedidos">
             <h3 class="cabecalho-meusPedidos">Meus Pedidos</h3>
 
-            <div id="cartaoPedidos" class="cartao-pedidos">
+            <div class="cartao-pedidos">
 
                 <div class="cartao-pedido">
-                            <div class="pedido-tag-categoria">Categoria</div>
-                            <p class="pedido-descricao">Descrição</p>
-                            
-                                <h4 class="pedido-local-titulo">Quarto</h4>
-                                <p class="pedido-local-detalhe">Casa: 4 • Quarto: 101</p>
+                    <div class="pedido-tag-categoria">Categoria</div>
+                    <p class="pedido-descricao">Solicito a troca da resistência do chuveiro perto da janela</p>
+                    
+                    <h4 class="pedido-local-titulo">Quarto</h4>
+                    <p class="pedido-local-detalhe">Casa: 4 • Quarto: 101 • Ala: 2</p>
 
-                                <h4 class="pedido-local-titulo">Local</h4>
-                                <p class="pedido-local-detalhe">Banheiro</p>
-                            
-                            <hr class="pedido-divisor">
-                            
-                            <div class="pedido-rodape">
-                                <div class="pedido-status-container">
-                                    <span class="pedido-tag-status">Status</span>
-                                    <span class="pedido-data">Criado em: Data</span>
-                                </div>
-                                <span class="pedido-id">ID do Pedido: ID</span>
-                            </div>
+                    <h4 class="pedido-local-titulo">Local</h4>
+                    <p class="pedido-local-detalhe">Banheiro</p>
+                    
+                    <hr class="pedido-divisor">
+                    
+                    <div class="pedido-rodape">
+                        <div class="pedido-status-container">
+                            <span class="pedido-tag-status">Status</span>
+                            <span class="pedido-data">Criado em: Data</span>
                         </div>
+                        <span class="pedido-id">ID do Pedido: #567482</span>
+                    </div>
+
+                    <hr class="pedido-divisor">
+
+                    <div class="pedido-comentarios">
+                        <p class="comentario-titulo">Comentários do Gestor:</p>
+                        <div class="comentario-conteudo"><P>Solicitação realizada, segue o ID: 365512</P></div>
+                    </div>
+
+                </div>
 
 
-                    <p class="texto-semPedidos">Nenhum pedido encontrado.</p>
+                <p class="texto-semPedidos">Nenhum pedido encontrado.</p>
 
             </div>
 
