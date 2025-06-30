@@ -44,6 +44,5 @@ def tela_cadastro():
     return render_template('cadastro.html')
 
 
-
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
