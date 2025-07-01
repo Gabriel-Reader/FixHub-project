@@ -16,7 +16,7 @@ body {
    Estrutura Principal
    ===================== */
 .section-gestor {
-    width: 100%;
+    width: 60%;
     max-width: 1280px;
     padding: 1rem;
 }

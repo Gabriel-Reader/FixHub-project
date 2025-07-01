@@ -262,6 +262,12 @@ input[type=number]::-webkit-inner-spin-button {
     margin: 0;
 }
 
+/* Remove as setas no Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
 /* =====================
    Imagem
    ===================== */
