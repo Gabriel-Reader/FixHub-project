@@ -1,48 +1,85 @@
-from flask import Flask, request, render_template, flash, redirect, url_for
-import re
+from flask import Flask, request, render_template, flash, redirect, url_for, session
+from validacoes import validar_email, validar_password, validar_username
 
+# --- Configuração da Aplicação Flask ---
 app = Flask(__name__)
+app.secret_key = 'Reader632' # Chave para sessões e mensagens flash.
 
-app.secret_key = 'Reader632' # chave para 'flash' funcionar e garantir segurança ao Flask
-
-
-def usuario_valido(usuario):
-    return re.fullmatch(r'^[a-zA-Z0-9_]{3,20}$', usuario) is not None
-
-def senha_valida(senha):
-    # Pelo menos 6 caracteres, pelo menos uma letra e um número
-    return re.fullmatch(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$', senha) is not None
-
+# --- Definição de Rotas da Aplicação ---
 
 @app.route('/', methods=['GET', 'POST'])
 def tela_login():
+    """
+    Rota para a tela de login.
+    Processa a submissão do formulário de login e redireciona.
+    """
     if request.method == 'POST':
-        # recuperando dados com base no 'name' do HTML
         usuario = request.form.get('usuario', '').strip()
         senha = request.form.get('senha', '').strip()
         erro = False
 
-        if not usuario_valido(usuario):
-            flash('* O usuário deve ter apenas letras e números (3-20 caracteres).')
-            erro = True
-
-        if not senha_valida(senha):
-            flash('* A senha deve ter pelo menos 6 caracteres, incluindo letras e números.')
-            erro = True
+        # TODO: Verificar dados do login no banco de dados.
 
         if erro:
             return redirect(url_for('tela_login'))
         else:
-            flash('Login bem-sucedido!')
-            # trocar pela página que será direcionada ao fazer login
-            return redirect(url_for('tela_login'))
+            # flash('Login bem-sucedido!')
+            return redirect(url_for('tela_cadastro'))
 
     return render_template('index.html')
 
+
 @app.route('/cadastro', methods=['GET', 'POST'])
 def tela_cadastro():
-    return render_template('cadastro.html')
+    """
+    Rota para a tela de cadastro de novos usuários.
+    Processa a submissão do formulário de cadastro e valida os dados.
+    """
+    if request.method == 'GET':
+        return render_template('cadastro.html')
+
+    elif request.method == 'POST':
+        c_usuario = request.form.get('c_usuario').strip()
+        c_email = request.form.get('c_email').strip()
+        c_senha = request.form.get('c_senha').strip()
+        c_quarto = request.form.get('c_quarto').strip()
+        c_casa = request.form.get('c_casa').strip()
+        erro = False
+
+        # Validação dos campos de cadastro
+        if not validar_username(c_usuario):
+            flash('* O usuário deve ter apenas letras e números (3-20 caracteres).')
+            erro = True
+
+        if not validar_password(c_senha):
+            flash('* A senha deve ter pelo menos 6 caracteres, incluindo letras e números.')
+            erro = True
+
+        if not validar_email(c_email):
+            flash('* Insira um E-mail válido.')
+            erro = True
+
+        # TODO: Salvar os dados no banco de dados.
+
+        if erro:
+            return redirect(url_for('tela_cadastro'))
+        else:
+            # flash('Cadastro bem-sucedido!')
+            return redirect(url_for('tela_login'))
 
 
+@app.route('/painel-morador')
+def painel_morador():
+    return render_template('painelMorador.html')
+
+@app.route('/painel-gestor')
+def painel_gestor():   
+    return render_template('painelGestor.html') 
+
+
+
+
+
+# --- Execução da Aplicação ---
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) # Ativa o modo de depuração
