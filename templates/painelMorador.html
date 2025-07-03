@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="item-formulario">
-                        <label for="m_casa">Local da Manutenção</label>
+                        <label for="m_localManutencao">Local da Manutenção</label>
                         <select id="m_localManutencao" name="m_localManutencao" required>
                             <option value="" disabled selected>Selecione o local...</option>
                             <option value="Quarto">Quarto</option>
@@ -78,7 +78,7 @@
 
                 <div class="item-formulario">
                     <label for="m_descricao" class="form-label">Descrição do Problema</label>
-                    <textarea id="m_descricao" rows="3" class="form-textarea" placeholder="Ex: Chuveiro do último box do banheiro não está esquentando." required></textarea>
+                    <textarea id="m_descricao" name="m_descricao" rows="3" class="form-textarea" placeholder="Ex: Chuveiro do último box do banheiro não está esquentando." required></textarea>
                 </div>
 
                 <div class="div-imagem">
@@ -97,41 +97,46 @@
             <h3 class="cabecalho-meusPedidos">Meus Pedidos</h3>
 
             <div class="cartao-pedidos">
+                {% if pedidos %}
+                    {% for pedido in pedidos %}
+                    <div class="cartao-pedido">
+                        <div class="pedido-tag-categoria">{{ pedido.categoria }}</div>
+                        <p class="pedido-descricao">{{ pedido.descricao }}</p>
+                        
+                        {% if pedido.quarto or pedido.ala %}
+                        <h4 class="pedido-local-titulo">Localização</h4>
+                        <p class="pedido-local-detalhe">
+                            Casa: {{ pedido.casa }}
+                            {% if pedido.quarto %} • Quarto: {{ pedido.quarto }} {% endif %}
+                            {% if pedido.ala %} • Ala: {{ pedido.ala }} {% endif %}
+                        </p>
+                        {% endif %}
 
-                <div class="cartao-pedido">
-                    <div class="pedido-tag-categoria">Categoria</div>
-                    <p class="pedido-descricao">Solicito a troca da resistência do chuveiro perto da janela</p>
-                    
-                    <h4 class="pedido-local-titulo">Quarto</h4>
-                    <p class="pedido-local-detalhe">Casa: 4 • Quarto: 101 • Ala: 2</p>
-
-                    <h4 class="pedido-local-titulo">Local</h4>
-                    <p class="pedido-local-detalhe">Banheiro</p>
-                    
-                    <hr class="pedido-divisor">
-                    
-                    <div class="pedido-rodape">
-                        <div class="pedido-status-container">
-                            <span class="pedido-tag-status">Status</span>
-                            <span class="pedido-data">Criado em: Data</span>
+                        <h4 class="pedido-local-titulo">Local da Manutenção</h4>
+                        <p class="pedido-local-detalhe">{{ pedido.local }}</p>
+                        
+                        <hr class="pedido-divisor">
+                        
+                        <div class="pedido-rodape">
+                            <div class="pedido-status-container">
+                                <span class="pedido-tag-status">{{ pedido.status }}</span>
+                                <span class="pedido-data">Criado em: {{ pedido.data_criacao }}</span>
+                            </div>
+                            <span class="pedido-id">ID do Pedido: {{ pedido.id }}</span>
                         </div>
-                        <span class="pedido-id">ID do Pedido: #567482</span>
+
+                        <hr class="pedido-divisor">
+
+                        <div class="pedido-comentarios">
+                            <p class="comentario-titulo">Comentários do Gestor:</p>
+                            <div class="comentario-conteudo"><p>{{ pedido.comentario_gestor }}</p></div>
+                        </div>
                     </div>
-
-                    <hr class="pedido-divisor">
-
-                    <div class="pedido-comentarios">
-                        <p class="comentario-titulo">Comentários do Gestor:</p>
-                        <div class="comentario-conteudo"><P>Solicitação realizada, segue o ID: 365512</P></div>
-                    </div>
-
-                </div>
-
-
-                <p class="texto-semPedidos">Nenhum pedido encontrado.</p>
-
+                    {% endfor %}
+                {% else %}
+                    <p class="texto-semPedidos">Nenhum pedido encontrado.</p>
+                {% endif %}
             </div>
-
         </div>
 
     </section>

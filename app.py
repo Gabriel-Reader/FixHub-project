@@ -1,5 +1,7 @@
 from flask import Flask, request, render_template, flash, redirect, url_for, session
 from validacoes import validar_email, validar_password, validar_username
+from datetime import datetime
+import random
 
 # --- Configuração da Aplicação Flask ---
 app = Flask(__name__)
@@ -9,10 +11,6 @@ app.secret_key = 'Reader632' # Chave para sessões e mensagens flash.
 
 @app.route('/', methods=['GET', 'POST'])
 def tela_login():
-    """
-    Rota para a tela de login.
-    Processa a submissão do formulário de login e redireciona.
-    """
     if request.method == 'POST':
         usuario = request.form.get('usuario', '').strip()
         senha = request.form.get('senha', '').strip()
@@ -31,10 +29,6 @@ def tela_login():
 
 @app.route('/cadastro', methods=['GET', 'POST'])
 def tela_cadastro():
-    """
-    Rota para a tela de cadastro de novos usuários.
-    Processa a submissão do formulário de cadastro e valida os dados.
-    """
     if request.method == 'GET':
         return render_template('cadastro.html')
 
@@ -68,15 +62,39 @@ def tela_cadastro():
             return redirect(url_for('tela_login'))
 
 
-@app.route('/painel-morador')
+@app.route('/painel-morador', methods=['GET', 'POST'])
 def painel_morador():
-    return render_template('painelMorador.html')
+    if 'pedidos' not in session: # verifica se a lista pedidos foi criada 
+        session['pedidos'] = []
+
+    if request.method == 'POST':
+        novo_pedido = {
+            'id': f'#{random.randint(1, 100000)}',
+            'casa': request.form.get('m_casa'),
+            'local': request.form.get('m_localManutencao'),
+            'categoria': request.form.get('m_categoria'),
+            'quarto': request.form.get('m_quarto'),
+            'ala': request.form.get('m_ala'),
+            'descricao': request.form.get('m_descricao'),
+            'data_criacao': datetime.now().strftime('%d/%m/%Y'),
+            'status': 'Aberto',
+            'comentario_gestor': 'Nenhum comentário ainda.'
+        }
+        
+        # salva o dic de info dos pedidos na sessão do usuário
+        pedidos_atualizados = session['pedidos']
+        pedidos_atualizados.insert(0, novo_pedido)
+        session['pedidos'] = pedidos_atualizados
+
+        return redirect(url_for('painel_morador'))
+
+    # recupera o dic de infos do pedido e retorna para o HTML
+    pedidos = session.get('pedidos', [])
+    return render_template('painelMorador.html', pedidos=pedidos)
 
 @app.route('/painel-gestor')
 def painel_gestor():   
     return render_template('painelGestor.html') 
-
-
 
 
 
