@@ -117,6 +117,7 @@ body {
     box-shadow: 6px 6px 0px #18181b;
     transition: all 0.2s ease-in-out;
     padding: 1.5rem;
+    margin-top: 2rem;
 }
 
 .label-pedidos {

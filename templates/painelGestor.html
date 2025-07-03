@@ -45,83 +45,88 @@
 
         </div>
 
-        <div id="text_semPedidos" class="text_sem-pedidos">
-            <p>Nenhum pedido encontrado.</p>
-        </div>
-
         <!-- LISTA DE PEDIDOS DOS MORADORES (CARD) -->
+        {% if pedidos %}
+            {% for pedido in pedidos %}
+            <div class="pedidos-gestor">
 
-        <div class="pedidos-gestor">
-
-            <div class="pedido-categoria-tag">
-                <span class="pedido-categoria-texto">Categoria</span>
-            </div>
-
-            <p class="pedido-descricao-texto">Descricao</p>
-
-            <div class="pedido-local-container">
-                <p class="pedido-local-texto">Local: Banheiro</p>
-                <p class="pedido-local-detalhes">
-                    <span>• Casa 4</span>
-                    <span>• Quarto 101</span>
-                    <span>• Ala 2</span>
-                </p>
-            </div>
-
-            <div class="separador-bottom"></div>
-
-            <div class="container-metadados">
-                <p>Criado em: 30/06/2025, 00:26:19</p>
-                <p>Morador: user_342333</p>
-                <p>ID: pedido_17512</p>
-            </div>
-
-            <div class="separador-top"></div>
-            
-            <div style="display: none;" class="container-imagem">
-                <img class="imagem-pedido" src="" alt="Foto do problema">
-            </div>
-
-            <div style="display: none;" class="container-comentarios-feitos">
-                <h4>Comentários:</h4>
-                <div class="texto-comentarios-feitos"></div>
-            </div>
-
-            <div class="container-atualizar-pedido">
-                <div class="secao-interacao-pedido">
-
-                    <div class="container-comentarios">
-                        <label class="label-pedidos">Adicionar Comentário</label>
-                        <textarea class="textarea-comentario" rows="1" placeholder="Adicionar comentário"></textarea>
-                        <!-- <textarea class="textaea-comentario" placeholder="Adicionar comentário (Ex: ID do sistema FURG: 12345)"></textarea> -->
-                    </div>
-
-                    
-                    <div class="container-selects">
-                        <label class="label-pedidos">Status</label>
-                        <select class="select-status">
-                            <option value="Aberto">Aberto</option>
-                            <option value="Em-analise">Em análise</option>
-                            <option value="Aguardando-execucao">Aguardando execução</option>
-                            <option value="Aguardando-peca">Aguardando peça</option>
-                            <option value="Concluido">Concluído</option>
-                            <option value="Cancelado">Cancelado</option>
-                        </select>
-                        
-                    </div>
-
-                    <div class="container-tag-status">
-                        <span class="tag-status">Aberto</span>
-                    </div>
-
+                <div class="pedido-categoria-tag">
+                    <span class="pedido-categoria-texto">{{ pedido.categoria }}</span>
                 </div>
 
-                <button class="btn-atualizar-pedido">
-                    Atualizar Pedido
-                </button>
+                <p class="pedido-descricao-texto">{{ pedido.descricao }}</p>
 
+                <div class="pedido-local-container">
+                    <p class="pedido-local-texto">Local: {{ pedido.local }}</p>
+                    <p class="pedido-local-detalhes">
+                        <span>• {{ pedido.casa }}</span>
+                        <span>• {{ pedido.quarto }}</span>
+                        <span>• {{ pedido.ala }}</span>
+                    </p>
+                </div>
+
+                <div class="separador-bottom"></div>
+
+                <div class="container-metadados">
+                    <p>Criado em: {{ pedido.data_criacao }}</p>
+                    <p>Morador: user_342333</p>
+                    <p>ID: pedido_17512</p>
+                </div>
+
+                <div class="separador-top"></div>
+                
+                <!-- oculto por enquanto -->
+                <div style="display: none;" class="container-imagem">
+                    <img class="imagem-pedido" src="" alt="Foto do problema">
+                </div>
+
+                <div style="display: none;" class="container-comentarios-feitos">
+                    <h4>Comentários:</h4>
+                    <div class="texto-comentarios-feitos"></div>
+                </div>
+                <!--  -->
+
+                <div class="container-atualizar-pedido">
+                    <div class="secao-interacao-pedido">
+
+                        <div class="container-comentarios">
+                            <label class="label-pedidos">Adicionar Comentário</label>
+                            <textarea class="textarea-comentario" rows="1" placeholder="Adicionar comentário"></textarea>
+                            <!-- <textarea class="textaea-comentario" placeholder="Adicionar comentário (Ex: ID do sistema FURG: 12345)"></textarea> -->
+                        </div>
+
+                        
+                        <div class="container-selects">
+                            <label class="label-pedidos">Status</label>
+                            <select class="select-status">
+                                <option value="Aberto">Aberto</option>
+                                <option value="Em-analise">Em análise</option>
+                                <option value="Aguardando-execucao">Aguardando execução</option>
+                                <option value="Aguardando-peca">Aguardando peça</option>
+                                <option value="Concluido">Concluído</option>
+                                <option value="Cancelado">Cancelado</option>
+                            </select>
+                            
+                        </div>
+
+                        <div class="container-tag-status">
+                            <span class="tag-status">{{  pedido.status }}</span>
+                        </div>
+
+                    </div>
+
+                    <button class="btn-atualizar-pedido">
+                        Atualizar Pedido
+                    </button>
+
+                </div>
             </div>
-        </div>
+            {% endfor %}
+        {% else %}
+            <div id="text_semPedidos" class="text_sem-pedidos">
+                <p>Nenhum pedido encontrado.</p>
+            </div>
+        {% endif %}
 
     </section>
 

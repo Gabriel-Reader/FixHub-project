@@ -3,9 +3,11 @@ from validacoes import validar_email, validar_password, validar_username
 from datetime import datetime
 import random
 
-# --- Configuração da Aplicação Flask ---
+
 app = Flask(__name__)
-app.secret_key = 'Reader632' # Chave para sessões e mensagens flash.
+app.secret_key = 'v5Y71oV1n7av'
+
+pedidos_temporarios = []
 
 # --- Definição de Rotas da Aplicação ---
 
@@ -22,9 +24,10 @@ def tela_login():
             return redirect(url_for('tela_login'))
         else:
             # flash('Login bem-sucedido!')
-            return redirect(url_for('tela_cadastro'))
+            return redirect(url_for('painel_morador'))
 
     return render_template('index.html')
+
 
 
 @app.route('/cadastro', methods=['GET', 'POST'])
@@ -62,6 +65,7 @@ def tela_cadastro():
             return redirect(url_for('tela_login'))
 
 
+
 @app.route('/painel-morador', methods=['GET', 'POST'])
 def painel_morador():
     if 'pedidos' not in session: # verifica se a lista pedidos foi criada 
@@ -80,6 +84,9 @@ def painel_morador():
             'status': 'Aberto',
             'comentario_gestor': 'Nenhum comentário ainda.'
         }
+
+        # lista temporária para desenvolver o painel do gestor (depois será removido)
+        pedidos_temporarios.insert(0, novo_pedido)
         
         # salva o dic de info dos pedidos na sessão do usuário
         pedidos_atualizados = session['pedidos']
@@ -88,13 +95,21 @@ def painel_morador():
 
         return redirect(url_for('painel_morador'))
 
-    # recupera o dic de infos do pedido e retorna para o HTML
+    # recupera o dic de infos do pedido e retornar para o HTML
     pedidos = session.get('pedidos', [])
     return render_template('painelMorador.html', pedidos=pedidos)
 
-@app.route('/painel-gestor')
-def painel_gestor():   
-    return render_template('painelGestor.html') 
+
+
+@app.route('/painel-gestor', methods=['GET', 'POST'])
+def painel_gestor():
+    return render_template('painelGestor.html', pedidos=pedidos_temporarios)
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('tela_login'))
 
 
 
