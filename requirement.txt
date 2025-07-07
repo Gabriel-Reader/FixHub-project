@@ -1,3 +1,32 @@
 flask
 re
 email-validator
+psycopg2
+
+
+-- Cria tabela morador
+CREATE TABLE morador (
+    id_morador SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    senha VARCHAR(64) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    ceu_quarto INTEGER NOT NULL,
+    ceu_casa VARCHAR(10),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Cria tabela pedidos
+
+CREATE TABLE pedidos (
+    id SERIAL PRIMARY KEY,
+    id_morador INTEGER NOT NULL,
+    categoria VARCHAR(50) NOT NULL,
+    local_manutencao VARCHAR(100) NOT NULL,
+    ala VARCHAR(50),
+    ceu quarto INTEGER NOT NULL,
+    descricao TEXT NOT NULL,
+    comentario_gestor TEXT,
+    status VARCHAR(20) NOT NULL DEFAULT 'Pendente',
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_morador FOREIGN KEY (id_morador) REFERENCES morador(id_morador)
+);

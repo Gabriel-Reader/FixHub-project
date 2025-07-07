@@ -1,8 +1,8 @@
 from flask import Flask, request, render_template, flash, redirect, url_for, session
+from manipular_database import criar_usuario, verificar_login, criar_pedido
 from validacoes import validar_email, validar_password, validar_username
 from datetime import datetime
 import random
-
 
 app = Flask(__name__)
 app.secret_key = 'v5Y71oV1n7av'
@@ -16,15 +16,21 @@ def tela_login():
     if request.method == 'POST':
         usuario = request.form.get('usuario', '').strip()
         senha = request.form.get('senha', '').strip()
-        erro = False
-
-        # TODO: Verificar dados do login no banco de dados.
-
-        if erro:
+        
+        # Verifica se os campos estão preenchidos
+        if not usuario or not senha:
+            flash('Por favor, preencha todos os campos.')
             return redirect(url_for('tela_login'))
-        else:
+
+        # Verifica as credenciais no banco de dados
+        if verificar_login(usuario, senha):
+            # Armazena o usuário na sessão
+            session['usuario'] = usuario
             # flash('Login bem-sucedido!')
-            return redirect(url_for('painel_morador'))
+            return redirect(url_for('painel_morador'))  # Redireciona para o painel do morador
+        else:
+            flash('Usuário ou senha incorretos.')
+            return redirect(url_for('tela_login'))
 
     return render_template('index.html')
 
@@ -43,6 +49,8 @@ def tela_cadastro():
         c_casa = request.form.get('c_casa').strip()
         erro = False
 
+        user = [c_usuario,c_senha,c_email,c_quarto,c_casa]
+
         # Validação dos campos de cadastro
         if not validar_username(c_usuario):
             flash('* O usuário deve ter apenas letras e números (3-20 caracteres).')
@@ -56,14 +64,12 @@ def tela_cadastro():
             flash('* Insira um E-mail válido.')
             erro = True
 
-        # TODO: Salvar os dados no banco de dados.
-
         if erro:
             return redirect(url_for('tela_cadastro'))
         else:
             # flash('Cadastro bem-sucedido!')
+            criar_usuario(user) #Chama função e crie um novo usuario
             return redirect(url_for('tela_login'))
-
 
 
 @app.route('/painel-morador', methods=['GET', 'POST'])
