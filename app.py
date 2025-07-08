@@ -61,7 +61,7 @@ def tela_cadastro():
             erro = True
 
         if not validar_email(c_email):
-            flash('* Insira um E-mail válido.')
+            flash('*Insira um E-mail válido.')
             erro = True
 
         if erro:
