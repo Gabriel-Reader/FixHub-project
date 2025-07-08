@@ -21,6 +21,7 @@ wheels/
 *.egg
 
 # Ambientes virtuais
+.venv/
 venv/
 env/
 ENV/
