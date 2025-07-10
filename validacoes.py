@@ -15,4 +15,4 @@ def validar_password(password):
 
 def validar_username(username):
     """Pelo menos 3 caracteres, letra e números"""
-    return re.fullmatch(r'^[a-zA-Z0-9_]{3,20}$', username) is not Non
+    return re.fullmatch(r'^[a-zA-Z0-9_]{3,20}$', username) is not None

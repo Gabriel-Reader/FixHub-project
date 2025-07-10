@@ -19,13 +19,14 @@ def verificar_login(usuario, senha):
     cursor_obj = conn.cursor()
     cursor_obj.execute(
         """
-            SELECT id_morador, senha FROM morador WHERE usuario = %s
+            SELECT id_morador, senha FROM morador WHERE nome = %s
         """, (usuario,)
     )
     resultado = cursor_obj.fetchone()
     if resultado:
         id_morador, senha_armazenada = resultado
         if senha == senha_armazenada:
+            cursor_obj.close()
             return id_morador  # Retorna id_morador para uso na sessão
     return False
 
