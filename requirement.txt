@@ -21,7 +21,7 @@ CREATE TABLE pedidos(
     id_pedido SERIAL, 
     casa VARCHAR(10) NOT NULL,
     categoria VARCHAR(50) NOT NULL, 
-    ocal_manuntencao VARCHAR(20),
+    local_manuntencao VARCHAR(50),
     ala INT, 
     quarto INT, 
     descricao VARCHAR(2000), 
