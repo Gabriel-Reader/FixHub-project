@@ -8,7 +8,7 @@ def criar_usuario(usuario):
             """
                 INSERT INTO morador (nome, senha, email, ceu_quarto, ceu_casa)
                 VALUES (%s, %s, %s, %s, %s)
-            """, usuario 
+            """, usuario
         )
     conn.commit()
     cursor_obj.close()
@@ -35,10 +35,10 @@ def criar_pedido(pedido):
     cursor_obj.execute(
         """
             INSERT INTO pedidos (
-                id, id_morador, categoria, local_manuntencao, 
-                ala, ceu_quarto, descricao, comentario_gestor, 
-                status, data_criacao
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                casa, local_manuntencao, categoria,
+                quarto, ala, descricao, comentario_gestor,
+                status
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """, pedido
     )
     conn.commit()

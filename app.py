@@ -1,3 +1,4 @@
+from os import stat
 from flask import Flask, request, render_template, flash, redirect, url_for, session
 from manipular_database import criar_usuario, verificar_login, criar_pedido
 from validacoes import validar_email, validar_password, validar_username
@@ -16,7 +17,7 @@ def tela_login():
     if request.method == 'POST':
         usuario = request.form.get('usuario', '').strip()
         senha = request.form.get('senha', '').strip()
-        
+
         # Verifica se os campos estão preenchidos
         if not usuario or not senha:
             flash('Por favor, preencha todos os campos.')
@@ -74,7 +75,7 @@ def tela_cadastro():
 
 @app.route('/painel-morador', methods=['GET', 'POST'])
 def painel_morador():
-    if 'pedidos' not in session: # verifica se a lista pedidos foi criada 
+    if 'pedidos' not in session: # verifica se a lista pedidos foi criada
         session['pedidos'] = []
 
     if request.method == 'POST':
@@ -91,9 +92,22 @@ def painel_morador():
             'comentario_gestor': 'Nenhum comentário ainda.'
         }
 
+        #Criando o pedido e colocando no banco de dados
+        casa = request.form.get('m_casa')
+        categoria = request.form.get('m_categoria')
+        local = request.form.get('m_localManutencao')
+        ala = request.form.get('m_ala')
+        quarto = request.form.get('m_quarto')
+        descricao = request.form.get('m_descricao')
+        comentario_gestor = 'Nenhum comentário ainda.'
+        status = 'Aberto'
+
+        pedido = [casa,categoria,local,ala,quarto,descricao,comentario_gestor,status]
+        criar_pedido(pedido)
+
         # lista temporária para desenvolver o painel do gestor (depois será removido)
         pedidos_temporarios.insert(0, novo_pedido)
-        
+
         # salva o dic de info dos pedidos na sessão do usuário
         pedidos_atualizados = session['pedidos']
         pedidos_atualizados.insert(0, novo_pedido)
