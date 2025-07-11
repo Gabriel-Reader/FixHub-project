@@ -129,8 +129,7 @@ def painel_morador():
         return render_template('painelMorador.html', pedidos=pedidos)
     
     else:
-        flash('Você não está logado')
-
+        return '<body style="background:white; text-align:center;"><h1> Você não está logado </h1></body>'
 
 
 @app.route('/painel-gestor', methods=['GET', 'POST'])
