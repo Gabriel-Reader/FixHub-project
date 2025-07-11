@@ -61,6 +61,7 @@ def criar_pedido(pedido):
     conn.commit()
     cursor_obj.close()
 
+
 def mostrar_pedidos_morador(id_morador):
     cursor_obj = conn.cursor()
     cursor_obj.execute(
@@ -78,7 +79,13 @@ def mostrar_pedidos_gestor():
     cursor_obj = conn.cursor()
     cursor_obj.execute(
         """
-            SELECT * FROM pedidos WHERE status != 'Concluido'
+            SELECT * FROM pedidos
+            ORDER BY
+            CASE
+                WHEN status = 'Concluido' THEN 1
+                ELSE 0
+            END,
+            data_criacao ASC
         """
     )
     pedidos = cursor_obj.fetchall()
@@ -105,15 +112,15 @@ def mostrar_pedidos_gestor():
 
     CREATE TABLE pedidos(
         id_pedido SERIAL,
-        id_morador INTEGER REFERENCES moradores(id_morador),
+        id_morador INTEGER REFERENCES morador(id_morador),
         casa VARCHAR(10) NOT NULL,
         categoria VARCHAR(50) NOT NULL,
-        local_manuntencao VARCHAR(20),
+        local_manuntencao VARCHAR(60),
         ala INT,
         quarto INT,
         descricao VARCHAR(2000),
         comentario_gestor VARCHAR(255),
-        status VARCHAR(20),
+        status VARCHAR(60),
         Criada_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY(id_pedido)
     );"""

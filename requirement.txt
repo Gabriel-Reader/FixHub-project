@@ -1,4 +1,3 @@
 flask
-re
 email-validator
 psycopg2

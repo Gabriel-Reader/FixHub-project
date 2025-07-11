@@ -1,14 +1,12 @@
 from os import stat
 from flask import Flask, request, render_template, flash, redirect, url_for, session
-from manipular_database import criar_usuario, verificar_login, criar_pedido, verifica_gestor
+from manipular_database import criar_usuario, verificar_login, criar_pedido, verifica_gestor, mostrar_pedidos_morador, mostrar_pedidos_gestor
 from validacoes import validar_email, validar_password, validar_username
 from datetime import datetime
 import random
 
 app = Flask(__name__)
 app.secret_key = 'd2ccd1731dc1cca262d6c889e3352a921f973db9698cc4ba'
-
-pedidos_temporarios = []
 
 # --- Definição de Rotas da Aplicação ---
 
@@ -90,22 +88,19 @@ def painel_morador():
     if 'user_id' in session:
         # flash(f'Logado como {session["username"]} (ID: {session["user_id"]})')
 
-        if 'pedidos' not in session: # verifica se a lista pedidos foi criada na sessão do usuário atual
-            session['pedidos'] = []
-
         if request.method == 'POST':
-            novo_pedido = {
-                'id': f'#{random.randint(1, 100000)}',
-                'casa': request.form.get('m_casa'),
-                'local': request.form.get('m_localManutencao'),
-                'categoria': request.form.get('m_categoria'),
-                'quarto': request.form.get('m_quarto'),
-                'ala': request.form.get('m_ala'),
-                'descricao': request.form.get('m_descricao'),
-                'data_criacao': datetime.now().strftime('%d/%m/%Y'),
-                'status': 'Aberto',
-                'comentario_gestor': 'Nenhum comentário ainda.'
-            }
+            # novo_pedido = {
+            #     'id': f'#{random.randint(1, 100000)}',
+            #     'casa': request.form.get('m_casa'),
+            #     'local': request.form.get('m_localManutencao'),
+            #     'categoria': request.form.get('m_categoria'),
+            #     'quarto': request.form.get('m_quarto'),
+            #     'ala': request.form.get('m_ala'),
+            #     'descricao': request.form.get('m_descricao'),
+            #     'data_criacao': datetime.now().strftime('%d/%m/%Y'),
+            #     'status': 'Aberto',
+            #     'comentario_gestor': 'Nenhum comentário ainda.'
+            # }
 
             #Criando o pedido e colocando no banco de dados
             casa = request.form.get('m_casa')
@@ -120,20 +115,13 @@ def painel_morador():
             pedido = [casa,categoria,local,ala,quarto,descricao,comentario_gestor,status]
             criar_pedido(pedido)
 
-            pedidos_temporarios.insert(0, novo_pedido)
-
-            # salva os pedidos na sessão do usuário
-            pedidos_atualizados = session['pedidos']
-            pedidos_atualizados.insert(0, novo_pedido)
-            session['pedidos'] = pedidos_atualizados
-
             return redirect(url_for('painel_morador'))
 
         # salva os pedidos na sessão
-        pedidos = session.get('pedidos', [])
+        id_morador = session.get('user_id')
+        pedidos = mostrar_pedidos_morador(id_morador)
         nome_usuario = session.get('username')
         ceu_casa = session.get('ceu')
-        print(ceu_casa)
 
         #TODO: Os pedidos são enviados aqui
         return render_template('painelMorador.html', pedidos=pedidos, nome_usuario=nome_usuario, ceu_casa=ceu_casa)
@@ -146,8 +134,9 @@ def painel_morador():
 @app.route('/painel-gestor', methods=['GET', 'POST'])
 def painel_gestor():
     if 'user_id' in session:
+        pedidos_gestor = mostrar_pedidos_gestor()
         nome_usuario = session.get('username')
-        return render_template('painelGestor.html', pedidos=pedidos_temporarios, nome_usuario=nome_usuario)
+        return render_template('painelGestor.html', pedidos=pedidos_gestor, nome_usuario=nome_usuario)
     else:
         return '<body style="background:white; text-align:center;"><h1> Você não está logado </h1></body>'
 
