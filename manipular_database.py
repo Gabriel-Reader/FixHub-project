@@ -1,7 +1,6 @@
 from conexao import conn
 
 
-
 def criar_usuario(usuario):
     cursor_obj = conn.cursor()
     cursor_obj.execute(
@@ -14,21 +13,32 @@ def criar_usuario(usuario):
     cursor_obj.close()
 
 
-# Função para verificar login
-def verificar_login(usuario, senha):
+def verificar_login(usuario, senha_digitada):
     cursor_obj = conn.cursor()
     cursor_obj.execute(
         """
-            SELECT id_morador, senha FROM morador WHERE nome = %s
+            SELECT id_morador, nome, senha FROM morador WHERE nome = %s
         """, (usuario,)
     )
-    resultado = cursor_obj.fetchone()
-    if resultado:
-        id_morador, senha_armazenada = resultado
-        if senha == senha_armazenada:
+    dados_usuario_db = cursor_obj.fetchone()
+
+    if dados_usuario_db:
+        id_morador_db, nome_db, senha_db = dados_usuario_db
+
+        if nome_db is None:
             cursor_obj.close()
-            return id_morador  # Retorna id_morador para uso na sessão
+            return False      
+
+        elif senha_digitada != senha_db:
+            cursor_obj.close()
+            return False
+        
+        else:
+            cursor_obj.close()
+            return dados_usuario_db
+    
     return False
+
 
 def criar_pedido(pedido):
     cursor_obj = conn.cursor()
