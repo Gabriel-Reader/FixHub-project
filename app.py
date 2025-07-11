@@ -111,15 +111,32 @@ def painel_morador():
             descricao = request.form.get('m_descricao')
             comentario_gestor = 'Nenhum comentário ainda.'
             status = 'Aberto'
+            id_morador = session.get('user_id')
 
             pedido = [id_morador,casa,categoria,local,ala,quarto,descricao,comentario_gestor,status]
             criar_pedido(pedido)
 
             return redirect(url_for('painel_morador'))
 
-        # salva os pedidos na sessão
         id_morador = session.get('user_id')
-        pedidos = mostrar_pedidos_morador(id_morador)
+        pedidos_tuplas = mostrar_pedidos_morador(id_morador)
+        pedidos = []
+        for p_tuple in pedidos_tuplas:
+            pedido_dict = {
+                'id': p_tuple[0],
+                'id_morador': p_tuple[1],
+                'casa': p_tuple[2],
+                'local': p_tuple[3],
+                'categoria': p_tuple[4],
+                'quarto': p_tuple[5],
+                'ala': p_tuple[6],
+                'descricao': p_tuple[7],
+                'comentario_gestor': p_tuple[8],
+                'status': p_tuple[9],
+                'data_criacao': p_tuple[10].strftime('%d/%m/%Y %H:%M:%S')
+            }
+            pedidos.append(pedido_dict)
+
         nome_usuario = session.get('username')
         ceu_casa = session.get('ceu')
 
@@ -134,7 +151,23 @@ def painel_morador():
 @app.route('/painel-gestor', methods=['GET', 'POST'])
 def painel_gestor():
     if 'user_id' in session:
-        pedidos_gestor = mostrar_pedidos_gestor()
+        pedidos_tuplas = mostrar_pedidos_gestor()
+        pedidos_gestor = []
+        for p_tuple in pedidos_tuplas:
+            pedido_dict = {
+                'id': p_tuple[0],
+                'id_morador': p_tuple[1],
+                'casa': p_tuple[2],
+                'local': p_tuple[3],
+                'categoria': p_tuple[4],
+                'quarto': p_tuple[5],
+                'ala': p_tuple[6],
+                'descricao': p_tuple[7],
+                'comentario_gestor': p_tuple[8],
+                'status': p_tuple[9],
+                'data_criacao': p_tuple[10].strftime('%d/%m/%Y %H:%M:%S')
+            }
+            pedidos_gestor.append(pedido_dict)
         nome_usuario = session.get('username')
         return render_template('painelGestor.html', pedidos=pedidos_gestor, nome_usuario=nome_usuario)
     else:

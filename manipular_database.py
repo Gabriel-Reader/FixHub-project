@@ -85,7 +85,7 @@ def mostrar_pedidos_gestor():
                 WHEN status = 'Concluido' THEN 1
                 ELSE 0
             END,
-            data_criacao ASC
+            criada_em ASC
         """
     )
     pedidos = cursor_obj.fetchall()
@@ -123,4 +123,5 @@ def mostrar_pedidos_gestor():
         status VARCHAR(60),
         Criada_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY(id_pedido)
-    );"""
+    );
+    """
