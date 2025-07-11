@@ -1,12 +1,12 @@
 from os import stat
 from flask import Flask, request, render_template, flash, redirect, url_for, session
-from manipular_database import criar_usuario, verificar_login, criar_pedido
+from manipular_database import criar_usuario, verificar_login, criar_pedido, verifica_gestor
 from validacoes import validar_email, validar_password, validar_username
 from datetime import datetime
 import random
 
 app = Flask(__name__)
-app.secret_key = 'v5Y71oV1n7av3sdf455'
+app.secret_key = 'd2ccd1731dc1cca262d6c889e3352a921f973db9698cc4ba'
 
 pedidos_temporarios = []
 
@@ -25,15 +25,21 @@ def tela_login():
 
         # Verifica as credenciais no banco de dados e as retorna
         dados_usuario_db = verificar_login(usuario_form, senha_form)
+        
         if dados_usuario_db:
-            id_morador_db, nome_db, senha_db = dados_usuario_db
+            id_morador_db, nome_db, senha_db, ceu_casa_db = dados_usuario_db
 
             # LOGIN BEM-SUCEDIDO: CRIAR A SESSÃO COOKIE
             session.clear()
             session['user_id'] = id_morador_db
             session['username'] = nome_db
+            session['ceu'] = ceu_casa_db
 
-            return redirect(url_for('painel_morador'))
+            if verifica_gestor(nome_db):
+                return redirect(url_for('painel_gestor'))
+            else:
+                return redirect(url_for('painel_morador'))
+        
         else:
             flash('Usuário ou senha incorretos.')
             return redirect(url_for('tela_login'))
@@ -74,7 +80,7 @@ def tela_cadastro():
             return redirect(url_for('tela_cadastro'))
         else:
             # flash('Cadastro bem-sucedido!')
-            criar_usuario(user) #Chama função e crie um novo usuario
+            criar_usuario(user) # Chama função e crie um novo usuario
             return redirect(url_for('tela_login'))
 
 
@@ -82,7 +88,7 @@ def tela_cadastro():
 @app.route('/painel-morador', methods=['GET', 'POST'])
 def painel_morador():
     if 'user_id' in session:
-        flash(f'Logado como {session["username"]} (ID: {session["user_id"]})')
+        # flash(f'Logado como {session["username"]} (ID: {session["user_id"]})')
 
         if 'pedidos' not in session: # verifica se a lista pedidos foi criada na sessão do usuário atual
             session['pedidos'] = []
@@ -125,16 +131,25 @@ def painel_morador():
 
         # salva os pedidos na sessão
         pedidos = session.get('pedidos', [])
+        nome_usuario = session.get('username')
+        ceu_casa = session.get('ceu')
+        print(ceu_casa)
+
         #TODO: Os pedidos são enviados aqui
-        return render_template('painelMorador.html', pedidos=pedidos)
+        return render_template('painelMorador.html', pedidos=pedidos, nome_usuario=nome_usuario, ceu_casa=ceu_casa)
     
     else:
         return '<body style="background:white; text-align:center;"><h1> Você não está logado </h1></body>'
 
 
+
 @app.route('/painel-gestor', methods=['GET', 'POST'])
 def painel_gestor():
-    return render_template('painelGestor.html', pedidos=pedidos_temporarios)
+    if 'user_id' in session:
+        nome_usuario = session.get('username')
+        return render_template('painelGestor.html', pedidos=pedidos_temporarios, nome_usuario=nome_usuario)
+    else:
+        return '<body style="background:white; text-align:center;"><h1> Você não está logado </h1></body>'
 
 
 

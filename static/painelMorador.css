@@ -4,6 +4,7 @@
 body {
     align-items: center;
     display: flex;
+    flex-direction: column;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     justify-content: center;
     padding: 1rem;
@@ -15,6 +16,45 @@ body {
 /* =====================
    Estrutura Principal
    ===================== */
+
+.header-painel {
+    width: 100%;
+    max-width: 100rem;
+    display: flex;
+    justify-content: flex-end; /* Alinha o conteúdo à direita */
+    align-items: center;
+    padding: 0.70rem 0.62rem 1.25rem 0.62rem; /* Espaçamento inferior para separar do título */
+    box-sizing: border-box;
+}
+
+.info-usuario {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Espaço entre os itens */
+    font-size: 16px;
+}
+
+.info-usuario .header-mensagem strong {
+    font-weight: 700; /* Deixa o nome em negrito */
+}
+
+.info-usuario .separator {
+    color: #cbd5e1; /* Cor do separador '|' */
+    font-weight: 300;
+}
+
+.info-usuario .logout-link {
+    color: #7c3aed;
+    text-decoration: none;
+    font-weight: 500;
+    transition: text-decoration 0.2s ease;
+}
+
+.info-usuario .logout-link:hover {
+    text-decoration: underline; /* Efeito ao passar o mouse */
+} 
+
+
 .section-morador {
     max-width: 50rem;
     width: 100%;

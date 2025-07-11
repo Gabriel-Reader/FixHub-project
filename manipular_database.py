@@ -13,17 +13,24 @@ def criar_usuario(usuario):
     cursor_obj.close()
 
 
+def verifica_gestor(nome_db):
+    if str(nome_db) in ['Gabriel', 'Renan']:
+        return True
+    else:
+        return False
+
+
 def verificar_login(usuario, senha_digitada):
     cursor_obj = conn.cursor()
     cursor_obj.execute(
         """
-            SELECT id_morador, nome, senha FROM morador WHERE nome = %s
+            SELECT id_morador, nome, senha, ceu_casa FROM morador WHERE nome = %s
         """, (usuario,)
     )
     dados_usuario_db = cursor_obj.fetchone()
 
     if dados_usuario_db:
-        id_morador_db, nome_db, senha_db = dados_usuario_db
+        id_morador_db, nome_db, senha_db, ceu_casa_db = dados_usuario_db
 
         if nome_db is None:
             cursor_obj.close()

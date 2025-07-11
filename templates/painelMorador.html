@@ -11,6 +11,14 @@
 
 <body>
 
+    <header class="header-painel">
+        <div class="info-usuario">
+            <span class="greeting">Olá, <strong>{{ nome_usuario }}</strong></span>
+            <span class="separator">|</span>
+            <a href="{{ url_for('logout') }}" class="logout-link">Sair</a>
+        </div>
+    </header>
+
     <section id="sectionMorador" class="section-morador">
         
         <header>
@@ -27,15 +35,8 @@
                         <label for="m_casa">Casa (CEU)</label>
                         <!-- <input type="text" id="m_casa" name="m_casa" placeholder="ex: CEU 4" maxlength="10" required> -->
                         <select id="m_casa" name="m_casa" required>
-                        <option value="" disabled selected>Selecione a casa...</option>
-                        <option value="1">CEU 1</option>
-                        <option value="2">CEU 2</option>
-                        <option value="3">CEU 3</option>
-                        <option value="4">CEU 4</option>
-                        <option value="126">CEU 126</option>
-                        <option value="145">CEU 145</option>
-                        <option value="Hotel">CEU Hotel</option>
-                    </select>
+                            <option value="" disabled selected>{{ ceu_casa }}</option>
+                        </select>
                     </div>
 
                     <div class="item-formulario">
