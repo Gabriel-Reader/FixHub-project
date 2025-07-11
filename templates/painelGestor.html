@@ -11,6 +11,14 @@
 
 <body>
 
+    <header class="header-painel">
+        <div class="info-usuario">
+            <span class="greeting">Olá, <strong>{{ nome_usuario }}</strong></span>
+            <span class="separador">|</span>
+            <a href="{{ url_for('logout') }}" class="logout-link">Sair</a>
+        </div>
+    </header>
+
     <section id="sectionGestor" class="section-gestor">
 
         <header class="cabecalho-section">
