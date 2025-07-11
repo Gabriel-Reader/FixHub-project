@@ -6,6 +6,7 @@
     <meta name="description" content="Tela de Cadastro" />
     <link rel="stylesheet" href="{{ url_for('static', filename='painelMorador.css') }}">
     <!-- <link rel="stylesheet" href="painelMorador.css" type="text/css"> -->
+    <link rel="icon" type="image/png" href="/static/favicon.png">
     <title>Portal do Morador</title>
 </head>
 
@@ -35,7 +36,7 @@
                         <label for="m_casa">Casa (CEU)</label>
                         <!-- <input type="text" id="m_casa" name="m_casa" placeholder="ex: CEU 4" maxlength="10" required> -->
                         <select id="m_casa" name="m_casa" required>
-                            <option value="" disabled selected>{{ ceu_casa }}</option>
+                            <option value="m_casa" selected>{{ ceu_casa }}</option>
                         </select>
                     </div>
 
