@@ -60,3 +60,60 @@ def criar_pedido(pedido):
     )
     conn.commit()
     cursor_obj.close()
+
+def mostrar_pedidos_morador(id_morador):
+    cursor_obj = conn.cursor()
+    cursor_obj.execute(
+        """
+            SELECT * FROM pedidos
+            WHERE id_morador = %s
+        """, (id_morador,)
+    )
+    pedidos = cursor_obj.fetchall()
+    cursor_obj.close()
+    return pedidos
+
+
+def mostrar_pedidos_gestor():
+    cursor_obj = conn.cursor()
+    cursor_obj.execute(
+        """
+            SELECT * FROM pedidos WHERE status != 'Concluido'
+        """
+    )
+    pedidos = cursor_obj.fetchall()
+    cursor_obj.close()
+    return pedidos
+
+
+    """
+    -- Cria tabela morador
+    CREATE TABLE morador (
+        id_morador SERIAL PRIMARY KEY,
+        nome VARCHAR(100) NOT NULL,
+        senha VARCHAR(64) NOT NULL,
+        email VARCHAR(100) NOT NULL UNIQUE,
+        ceu_quarto INTEGER NOT NULL,
+        ceu_casa VARCHAR(10),
+        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """
+
+
+    """
+    -- Cria tabela pedidos
+
+    CREATE TABLE pedidos(
+        id_pedido SERIAL,
+        id_morador INTEGER REFERENCES moradores(id_morador),
+        casa VARCHAR(10) NOT NULL,
+        categoria VARCHAR(50) NOT NULL,
+        local_manuntencao VARCHAR(20),
+        ala INT,
+        quarto INT,
+        descricao VARCHAR(2000),
+        comentario_gestor VARCHAR(255),
+        status VARCHAR(20),
+        Criada_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY(id_pedido)
+    );"""
