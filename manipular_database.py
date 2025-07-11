@@ -34,16 +34,16 @@ def verificar_login(usuario, senha_digitada):
 
         if nome_db is None:
             cursor_obj.close()
-            return False      
+            return False
 
         elif senha_digitada != senha_db:
             cursor_obj.close()
             return False
-        
+
         else:
             cursor_obj.close()
             return dados_usuario_db
-    
+
     return False
 
 
@@ -52,10 +52,10 @@ def criar_pedido(pedido):
     cursor_obj.execute(
         """
             INSERT INTO pedidos (
-                casa, local_manuntencao, categoria,
+                id_morador,casa, local_manuntencao, categoria,
                 quarto, ala, descricao, comentario_gestor,
                 status
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, pedido
     )
     conn.commit()

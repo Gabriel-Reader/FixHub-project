@@ -23,7 +23,7 @@ def tela_login():
 
         # Verifica as credenciais no banco de dados e as retorna
         dados_usuario_db = verificar_login(usuario_form, senha_form)
-        
+
         if dados_usuario_db:
             id_morador_db, nome_db, senha_db, ceu_casa_db = dados_usuario_db
 
@@ -37,7 +37,7 @@ def tela_login():
                 return redirect(url_for('painel_gestor'))
             else:
                 return redirect(url_for('painel_morador'))
-        
+
         else:
             flash('Usuário ou senha incorretos.')
             return redirect(url_for('tela_login'))
@@ -112,7 +112,7 @@ def painel_morador():
             comentario_gestor = 'Nenhum comentário ainda.'
             status = 'Aberto'
 
-            pedido = [casa,categoria,local,ala,quarto,descricao,comentario_gestor,status]
+            pedido = [id_morador,casa,categoria,local,ala,quarto,descricao,comentario_gestor,status]
             criar_pedido(pedido)
 
             return redirect(url_for('painel_morador'))
@@ -125,7 +125,7 @@ def painel_morador():
 
         #TODO: Os pedidos são enviados aqui
         return render_template('painelMorador.html', pedidos=pedidos, nome_usuario=nome_usuario, ceu_casa=ceu_casa)
-    
+
     else:
         return '<body style="background:white; text-align:center;"><h1> Você não está logado </h1></body>'
 
