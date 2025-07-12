@@ -13,13 +13,6 @@ def criar_usuario(usuario):
     cursor_obj.close()
 
 
-def verifica_gestor(nome_db):
-    if str(nome_db) in ['Gabriel', 'Renan']:
-        return True
-    else:
-        return False
-
-
 def verificar_login(usuario, senha_digitada):
     cursor_obj = conn.cursor()
     cursor_obj.execute(

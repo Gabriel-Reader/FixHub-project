@@ -1,6 +1,8 @@
 from flask import Flask, request, render_template, flash, redirect, url_for, session
-from manipular_database import criar_usuario, verificar_login, criar_pedido, verifica_gestor, mostrar_pedidos_morador, mostrar_pedidos_gestor
-from validacoes import validar_email, validar_password, validar_username
+from manipular_database import criar_usuario, verificar_login, criar_pedido, mostrar_pedidos_morador, mostrar_pedidos_gestor
+from validacoes import validar_email, validar_password, validar_username, verifica_gestor
+from utilitarios import converter_pedidos_para_dicionario
+from manipular_forms import obter_dados_pedido, obter_dados_cadastro, obter_dados_login
 
 app = Flask(__name__)
 app.secret_key = 'd2ccd1731dc1cca262d6c889e3352a921f973db9698cc4ba'
@@ -10,8 +12,9 @@ app.secret_key = 'd2ccd1731dc1cca262d6c889e3352a921f973db9698cc4ba'
 @app.route('/', methods=['GET', 'POST'])
 def tela_login():
     if request.method == 'POST':
-        usuario_form = request.form.get('usuario', '').strip()
-        senha_form = request.form.get('senha', '').strip()
+
+        dados_login = obter_dados_login()
+        usuario_form, senha_form = dados_login
 
         # Verifica as credenciais no banco de dados e as retorna
         dados_usuario_db = verificar_login(usuario_form, senha_form)
@@ -44,14 +47,9 @@ def tela_cadastro():
         return render_template('cadastro.html')
 
     elif request.method == 'POST':
-        c_usuario = request.form.get('c_usuario').strip()
-        c_email = request.form.get('c_email').strip()
-        c_senha = request.form.get('c_senha').strip()
-        c_quarto = request.form.get('c_quarto').strip()
-        c_casa = request.form.get('c_casa').strip()
         erro = False
-
-        user = [c_usuario,c_senha,c_email,c_quarto,c_casa]
+        user = obter_dados_cadastro()
+        c_usuario, c_email, c_senha, c_quarto, c_casa = user
 
         # Validação dos campos de cadastro
         if not validar_username(c_usuario):
@@ -82,40 +80,14 @@ def painel_morador():
 
         if request.method == 'POST':
 
-            # Recuperando dados do form
-            casa = request.form.get('m_casa')
-            categoria = request.form.get('m_categoria')
-            local = request.form.get('m_localManutencao')
-            ala = request.form.get('m_ala')
-            quarto = request.form.get('m_quarto')
-            descricao = request.form.get('m_descricao')
-            comentario_gestor = 'Nenhum comentário ainda.'
-            status = 'Aberto'
-            id_morador = session.get('user_id')
-
-            pedido = [id_morador,casa,categoria,local,ala,quarto,descricao,comentario_gestor,status]
+            pedido = obter_dados_pedido()
             criar_pedido(pedido)
 
             return redirect(url_for('painel_morador'))
 
         id_morador = session.get('user_id')
         pedidos_tuplas = mostrar_pedidos_morador(id_morador)
-        pedidos = []
-        for p_tuple in pedidos_tuplas:
-            pedido_dict = {
-                'id': p_tuple[0],
-                'id_morador': p_tuple[1],
-                'casa': p_tuple[2],
-                'local': p_tuple[3],
-                'categoria': p_tuple[4],
-                'quarto': p_tuple[5],
-                'ala': p_tuple[6],
-                'descricao': p_tuple[7],
-                'comentario_gestor': p_tuple[8],
-                'status': p_tuple[9],
-                'data_criacao': p_tuple[10].strftime('%d/%m/%Y %H:%M:%S')
-            }
-            pedidos.append(pedido_dict)
+        pedidos = converter_pedidos_para_dicionario(pedidos_tuplas)
 
         nome_usuario = session.get('username')
         ceu_casa = session.get('ceu')
@@ -132,24 +104,10 @@ def painel_morador():
 def painel_gestor():
     if 'user_id' in session:
         pedidos_tuplas = mostrar_pedidos_gestor()
-        pedidos_gestor = []
-        for p_tuple in pedidos_tuplas:
-            pedido_dict = {
-                'id': p_tuple[0],
-                'id_morador': p_tuple[1],
-                'casa': p_tuple[2],
-                'local': p_tuple[3],
-                'categoria': p_tuple[4],
-                'quarto': p_tuple[5],
-                'ala': p_tuple[6],
-                'descricao': p_tuple[7],
-                'comentario_gestor': p_tuple[8],
-                'status': p_tuple[9],
-                'data_criacao': p_tuple[10].strftime('%d/%m/%Y %H:%M:%S')
-            }
-            pedidos_gestor.append(pedido_dict)
+        pedidos_gestor = converter_pedidos_para_dicionario(pedidos_tuplas)
         nome_usuario = session.get('username')
         return render_template('painelGestor.html', pedidos=pedidos_gestor, nome_usuario=nome_usuario)
+    
     else:
         return '<body style="background:white; text-align:center;"><h1> Você não está logado </h1></body>'
 

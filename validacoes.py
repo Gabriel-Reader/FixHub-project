@@ -19,3 +19,10 @@ def validar_password(password):
 def validar_username(username):
     """Pelo menos 3 caracteres, letra e números"""
     return re.fullmatch(r'^[a-zA-Z0-9_]{3,20}$', username) is not None
+
+
+def verifica_gestor(nome_db):
+    if str(nome_db) in ['Gabriel', 'Renan']:
+        return True
+    else:
+        return False
