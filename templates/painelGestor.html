@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Tela de Cadastro" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='painelGestor.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/painelGestor.css') }}">
     <!-- <link rel="stylesheet" href="painelGestor.css" type="text/css"> -->
-    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <title>Portal do Gestor</title>
 </head>
 
@@ -98,38 +98,39 @@
                 <!--  -->
 
                 <div class="container-atualizar-pedido">
-                    <div class="secao-interacao-pedido">
+                    <form action="{{ url_for('atualizar_pedido') }}" method="POST">
+                        <input type="hidden" name="pedido_id" value="{{ pedido.id }}">
+                        <div class="secao-interacao-pedido">
 
-                        <div class="container-comentarios">
-                            <label class="label-pedidos">Adicionar Comentário</label>
-                            <textarea class="textarea-comentario" rows="1" placeholder="Adicionar comentário"></textarea>
-                            <!-- <textarea class="textaea-comentario" placeholder="Adicionar comentário (Ex: ID do sistema FURG: 12345)"></textarea> -->
-                        </div>
+                            <div class="container-comentarios">
+                                <label class="label-pedidos">Adicionar Comentário</label>
+                                <textarea class="textarea-comentario" rows="1" placeholder="Adicionar comentário" name="comentario">{{ pedido.comentario_gestor if pedido.comentario_gestor else '' }}</textarea>
+                            </div>
 
-                        
-                        <div class="container-selects">
-                            <label class="label-pedidos">Status</label>
-                            <select class="select-status">
-                                <option value="Aberto">Aberto</option>
-                                <option value="Em-analise">Em análise</option>
-                                <option value="Aguardando-execucao">Aguardando execução</option>
-                                <option value="Aguardando-peca">Aguardando peça</option>
-                                <option value="Concluido">Concluído</option>
-                                <option value="Cancelado">Cancelado</option>
-                            </select>
                             
+                            <div class="container-selects">
+                                <label class="label-pedidos">Status</label>
+                                <select class="select-status" name="status">
+                                    <option value="Aberto" {% if pedido.status == 'Aberto' %}selected{% endif %}>Aberto</option>
+                                    <option value="Em analise" {% if pedido.status == 'Em-analise' %}selected{% endif %}>Em análise</option>
+                                    <option value="Aguardando execução" {% if pedido.status == 'Aguardando-execucao' %}selected{% endif %}>Aguardando execução</option>
+                                    <option value="Aguardando peça" {% if pedido.status == 'Aguardando-peca' %}selected{% endif %}>Aguardando peça</option>
+                                    <option value="Concluído" {% if pedido.status == 'Concluido' %}selected{% endif %}>Concluído</option>
+                                    <option value="Cancelado" {% if pedido.status == 'Cancelado' %}selected{% endif %}>Cancelado</option>
+                                </select>
+                                
+                            </div>
+
+                            <div class="container-tag-status">
+                                <span class="tag-status">{{  pedido.status }}</span>
+                            </div>
+
                         </div>
 
-                        <div class="container-tag-status">
-                            <span class="tag-status">{{  pedido.status }}</span>
-                        </div>
-
-                    </div>
-
-                    <button class="btn-atualizar-pedido">
-                        Atualizar Pedido
-                    </button>
-
+                        <button type="submit" class="btn-atualizar-pedido">
+                            Atualizar Pedido
+                        </button>
+                    </form>
                 </div>
             </div>
             {% endfor %}

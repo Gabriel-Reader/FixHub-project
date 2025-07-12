@@ -1,4 +1,4 @@
-from conexao import conn
+from services.conexao import conn
 
 
 def criar_usuario(usuario):

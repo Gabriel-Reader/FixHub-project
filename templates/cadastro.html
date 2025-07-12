@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Tela de Cadastro" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='cadastro.css') }}">
-    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <title>Página de Cadastro</title>
 </head>
 
@@ -32,12 +32,12 @@
 
                 <div class="item-formulario">
                     <label for="c_usuario">Nome de usuário</label>
-                    <input type="text" id="c_usuario" name="c_usuario" placeholder="ex: JoaoSilva25" required>
+                    <input type="text" id="c_usuario" name="c_usuario" placeholder="ex: JoaoSilva25" required value="{{ user_data[0] if user_data else '' }}">
                 </div>
 
                 <div class="item-formulario">
                     <label for="c_email">E-mail</label>
-                    <input type="email" id="c_email" name="c_email" placeholder="seu-email@gmail.com" required>
+                    <input type="email" id="c_email" name="c_email" placeholder="seu-email@gmail.com" required value="{{ user_data[1] if user_data else '' }}">
                 </div>
 
                 <div class="item-formulario">
@@ -49,7 +49,7 @@
 
                     <div class="item-formulario">
                         <label for="c_quarto">Quarto</label>
-                        <input type="number" id="c_quarto" name="c_quarto" placeholder="ex: 102" required>
+                        <input type="number" id="c_quarto" name="c_quarto" placeholder="ex: 102" required value="{{ user_data[3] if user_data else '' }}">
                     </div>
                     
 
@@ -57,14 +57,14 @@
                         <label for="c_casa">Casa (CEU)</label>
                         <!-- <input type="text" id="c_casa" name="c_casa" placeholder="ex: CEU1" required> -->
                         <select id="c_casa" name="c_casa" required>
-                            <option value="" disabled selected>Selecione a casa...</option>
-                            <option value="1">CEU 1</option>
-                            <option value="2">CEU 2</option>
-                            <option value="3">CEU 3</option>
-                            <option value="4">CEU 4</option>
-                            <option value="126">CEU 126</option>
-                            <option value="145">CEU 145</option>
-                            <option value="Hotel">CEU Hotel</option>
+                            <option value="" disabled {% if not user_data %}selected{% endif %}>Selecione a casa...</option>
+                            <option value="1" {% if user_data and user_data[4] == '1' %}selected{% endif %}>CEU 1</option>
+                            <option value="2" {% if user_data and user_data[4] == '2' %}selected{% endif %}>CEU 2</option>
+                            <option value="3" {% if user_data and user_data[4] == '3' %}selected{% endif %}>CEU 3</option>
+                            <option value="4" {% if user_data and user_data[4] == '4' %}selected{% endif %}>CEU 4</option>
+                            <option value="126" {% if user_data and user_data[4] == '126' %}selected{% endif %}>CEU 126</option>
+                            <option value="145" {% if user_data and user_data[4] == '145' %}selected{% endif %}>CEU 145</option>
+                            <option value="Hotel" {% if user_data and user_data[4] == 'Hotel' %}selected{% endif %}>CEU Hotel</option>
                         </select>
                     </div>
 

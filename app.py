@@ -1,8 +1,8 @@
 from flask import Flask, request, render_template, flash, redirect, url_for, session
-from manipular_database import criar_usuario, verificar_login, criar_pedido, mostrar_pedidos_morador, mostrar_pedidos_gestor
-from validacoes import validar_email, validar_password, validar_username, verifica_gestor
-from utilitarios import converter_pedidos_para_dicionario
-from manipular_forms import obter_dados_pedido, obter_dados_cadastro, obter_dados_login
+from services.manipular_database import criar_usuario, verificar_login, criar_pedido, mostrar_pedidos_morador, mostrar_pedidos_gestor, alterar_status_pedido, comentario_gestor
+from utils.validacoes import validar_email, validar_password, validar_username, verifica_gestor
+from utils.utilitarios import converter_pedidos_para_dicionario
+from utils.manipular_forms import obter_dados_pedido, obter_dados_cadastro, obter_dados_login, obter_atualizacao_pedido
 
 app = Flask(__name__)
 app.secret_key = 'd2ccd1731dc1cca262d6c889e3352a921f973db9698cc4ba'
@@ -65,7 +65,7 @@ def tela_cadastro():
             erro = True
 
         if erro:
-            return redirect(url_for('tela_cadastro'))
+            return render_template('cadastro.html', user_data=user)
         else:
             # flash('Cadastro bem-sucedido!')
             criar_usuario(user) # Chama função e crie um novo usuario
@@ -96,11 +96,11 @@ def painel_morador():
         return render_template('painelMorador.html', pedidos=pedidos, nome_usuario=nome_usuario, ceu_casa=ceu_casa)
 
     else:
-        return '<body style="background:white; text-align:center;"><h1> Você não está logado </h1></body>'
+        return redirect(url_for('unauthorized'))
 
 
 
-@app.route('/painel-gestor', methods=['GET', 'POST'])
+@app.route('/painel-gestor', methods=['GET'])
 def painel_gestor():
     if 'user_id' in session:
         pedidos_tuplas = mostrar_pedidos_gestor()
@@ -109,7 +109,24 @@ def painel_gestor():
         return render_template('painelGestor.html', pedidos=pedidos_gestor, nome_usuario=nome_usuario)
     
     else:
-        return '<body style="background:white; text-align:center;"><h1> Você não está logado </h1></body>'
+        return redirect(url_for('unauthorized'))
+
+
+
+@app.route('/atualizar-pedido', methods=['POST'])
+def atualizar_pedido():
+    if request.method == 'POST':
+        if 'user_id' in session:
+            novos_dados_pedido = obter_atualizacao_pedido()
+            pedido_id, novo_status, novo_comentario = novos_dados_pedido
+
+            alterar_status_pedido(pedido_id, novo_status)
+            comentario_gestor(pedido_id, novo_comentario)
+            
+            return redirect(url_for('painel_gestor'))
+
+        else:
+            return redirect(url_for('unauthorized'))
 
 
 
@@ -118,6 +135,12 @@ def logout():
     if 'user_id' in session:
         session.clear()
         return redirect(url_for('tela_login'))
+
+
+
+@app.route('/unauthorized')
+def unauthorized():
+    return render_template('unauthorized.html')
 
 
 

@@ -27,3 +27,10 @@ def obter_dados_login():
     senha = request.form.get('senha').strip()
 
     return [usuario, senha]
+
+def obter_atualizacao_pedido():
+    pedido_id = request.form.get('pedido_id')
+    novo_status = request.form.get('status')
+    novo_comentario = request.form.get('comentario')
+
+    return [pedido_id, novo_status, novo_comentario]
