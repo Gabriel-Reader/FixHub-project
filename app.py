@@ -1,9 +1,6 @@
-from os import stat
 from flask import Flask, request, render_template, flash, redirect, url_for, session
 from manipular_database import criar_usuario, verificar_login, criar_pedido, verifica_gestor, mostrar_pedidos_morador, mostrar_pedidos_gestor
 from validacoes import validar_email, validar_password, validar_username
-from datetime import datetime
-import random
 
 app = Flask(__name__)
 app.secret_key = 'd2ccd1731dc1cca262d6c889e3352a921f973db9698cc4ba'
@@ -15,11 +12,6 @@ def tela_login():
     if request.method == 'POST':
         usuario_form = request.form.get('usuario', '').strip()
         senha_form = request.form.get('senha', '').strip()
-
-        # Verifica se os campos estão preenchidos
-        if not usuario_form or not senha_form:
-            flash('Por favor, preencha todos os campos.')
-            return redirect(url_for('tela_login'))
 
         # Verifica as credenciais no banco de dados e as retorna
         dados_usuario_db = verificar_login(usuario_form, senha_form)
@@ -89,20 +81,8 @@ def painel_morador():
         # flash(f'Logado como {session["username"]} (ID: {session["user_id"]})')
 
         if request.method == 'POST':
-            # novo_pedido = {
-            #     'id': f'#{random.randint(1, 100000)}',
-            #     'casa': request.form.get('m_casa'),
-            #     'local': request.form.get('m_localManutencao'),
-            #     'categoria': request.form.get('m_categoria'),
-            #     'quarto': request.form.get('m_quarto'),
-            #     'ala': request.form.get('m_ala'),
-            #     'descricao': request.form.get('m_descricao'),
-            #     'data_criacao': datetime.now().strftime('%d/%m/%Y'),
-            #     'status': 'Aberto',
-            #     'comentario_gestor': 'Nenhum comentário ainda.'
-            # }
 
-            #Criando o pedido e colocando no banco de dados
+            # Recuperando dados do form
             casa = request.form.get('m_casa')
             categoria = request.form.get('m_categoria')
             local = request.form.get('m_localManutencao')
@@ -177,8 +157,9 @@ def painel_gestor():
 
 @app.route('/logout')
 def logout():
-    session.clear()
-    return redirect(url_for('tela_login'))
+    if 'user_id' in session:
+        session.clear()
+        return redirect(url_for('tela_login'))
 
 
 

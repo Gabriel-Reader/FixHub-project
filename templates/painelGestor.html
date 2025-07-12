@@ -68,11 +68,13 @@
                 <div class="pedido-local-container">
                     <p class="pedido-local-texto">Local: {{ pedido.local }}</p>
                     <p class="pedido-local-detalhes">
-                        <span>• {{ pedido.casa }}</span>
-                        <span>• {{ pedido.quarto }}</span>
-                        <span>• {{ pedido.ala }}</span>
+                        <span>{% if pedido.casa %} • Casa: {{ pedido.casa }} {% endif %}</span>
+                        <span>{% if pedido.quarto %}• Quarto: {{ pedido.quarto }} {% endif %}</span>
+                        <span>{% if pedido.ala %} • Ala: {{ pedido.ala }} {% endif %}</span>
                     </p>
                 </div>
+
+                <!-- {% if pedido.quarto %} • Quarto: {{ pedido.quarto }} {% endif %} -->
 
                 <div class="separador-bottom"></div>
 
