@@ -93,6 +93,32 @@ def mostrar_pedidos_gestor():
     return pedidos
 
 
+def alterar_status_pedido(id_pedido, novo_status):
+    cursor_obj = conn.cursor()
+    cursor_obj.execute(
+        """
+            UPDATE pedidos
+            SET status = %s
+            WHERE id_pedido = %s
+        """, (novo_status, id_pedido)
+    )
+    conn.commit()
+    cursor_obj.close()
+
+
+def comentario_gestor(id_pedido, comentario):
+    cursor_obj = conn.cursor()
+    cursor_obj.execute(
+        """
+            UPDATE pedidos
+            SET comentario_gestor = %s
+            WHERE id_pedido = %s
+        """, (comentario, id_pedido)
+    )
+    conn.commit()
+    cursor_obj.close()
+
+
     """
     -- Cria tabela morador
     CREATE TABLE morador (
