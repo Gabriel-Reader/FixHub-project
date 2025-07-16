@@ -12,7 +12,8 @@ def converter_pedidos_para_dicionario(pedidos_tuplas):
             'descricao': p_tuple[7],
             'comentario_gestor': p_tuple[8],
             'status': p_tuple[9],
-            'data_criacao': p_tuple[10].strftime('%d/%m/%Y %H:%M:%S')
+            'data_criacao': p_tuple[10].strftime('%d/%m/%Y %H:%M:%S'),
+            'nome_morador': p_tuple[11] if len(p_tuple) > 11 else 'Não encontrado'
         }
         pedidos.append(pedido_dict)
     return pedidos

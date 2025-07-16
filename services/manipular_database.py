@@ -1,4 +1,5 @@
 from services.conexao import conn
+from datetime import datetime
 
 
 def criar_usuario(usuario):
@@ -72,13 +73,15 @@ def mostrar_pedidos_gestor():
     cursor_obj = conn.cursor()
     cursor_obj.execute(
         """
-            SELECT * FROM pedidos
+            SELECT p.*, m.nome AS nome_morador
+            FROM pedidos p
+            JOIN morador m ON p.id_morador = m.id_morador
             ORDER BY
             CASE
-                WHEN status = 'Concluido' THEN 1
+                WHEN p.status = 'Concluido' THEN 1
                 ELSE 0
             END,
-            criada_em ASC
+            p.criada_em ASC
         """
     )
     pedidos = cursor_obj.fetchall()
@@ -99,14 +102,40 @@ def alterar_status_pedido(id_pedido, novo_status):
     cursor_obj.close()
 
 
-def comentario_gestor(id_pedido, comentario):
+def comentario_gestor(id_pedido, novo_comentario):
     cursor_obj = conn.cursor()
+
+    # Recupera o comentário existente
+    cursor_obj.execute(
+        """
+            SELECT comentario_gestor FROM pedidos
+            WHERE id_pedido = %s
+        """, (id_pedido,)
+    )
+    comentario_antigo = cursor_obj.fetchone()[0] or ""
+
+    # Cria o novo comentário com data e hora
+    data_hora_atual = datetime.now().strftime("%d/%m/%Y %H:%M")
+    comentario_atualizado = f"{comentario_antigo}\n{data_hora_atual} - {novo_comentario}"
+
     cursor_obj.execute(
         """
             UPDATE pedidos
             SET comentario_gestor = %s
             WHERE id_pedido = %s
-        """, (comentario, id_pedido)
+        """, (comentario_atualizado, id_pedido)
+    )
+    conn.commit()
+    cursor_obj.close()
+
+
+def deletar_pedido(id_pedido, id_morador):
+    cursor_obj = conn.cursor()
+    cursor_obj.execute(
+        """
+            DELETE FROM pedidos
+            WHERE id_pedido = %s AND id_morador = %s
+        """, (id_pedido, id_morador)
     )
     conn.commit()
     cursor_obj.close()

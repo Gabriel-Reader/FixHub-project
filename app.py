@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, flash, redirect, url_for, session
-from services.manipular_database import criar_usuario, verificar_login, criar_pedido, mostrar_pedidos_morador, mostrar_pedidos_gestor, alterar_status_pedido, comentario_gestor
+from services.manipular_database import criar_usuario, verificar_login, criar_pedido, mostrar_pedidos_morador, mostrar_pedidos_gestor, alterar_status_pedido, comentario_gestor, deletar_pedido
 from utils.validacoes import validar_email, validar_password, validar_username, verifica_gestor
 from utils.utilitarios import converter_pedidos_para_dicionario
 from utils.manipular_forms import obter_dados_pedido, obter_dados_cadastro, obter_dados_login, obter_atualizacao_pedido
@@ -22,7 +22,7 @@ def tela_login():
         if dados_usuario_db:
             id_morador_db, nome_db, senha_db, ceu_casa_db = dados_usuario_db
 
-            # LOGIN BEM-SUCEDIDO: CRIAR A SESSÃO COOKIE
+            # LOGIN BEM-SUCEDIDO: CRIA A SESSÃO COOKIE
             session.clear()
             session['user_id'] = id_morador_db
             session['username'] = nome_db
@@ -127,6 +127,18 @@ def atualizar_pedido():
 
         else:
             return redirect(url_for('unauthorized'))
+
+
+
+@app.route('/deletar-pedido/<int:id_pedido>', methods=['POST'])
+def deletar_pedido_rota(id_pedido):
+    if 'user_id' in session:
+        id_morador = session.get('user_id')
+        deletar_pedido(id_pedido, id_morador)
+        # flash('Pedido deletado com sucesso.')
+        return redirect(url_for('painel_morador'))
+    else:
+        return redirect(url_for('unauthorized'))
 
 
 

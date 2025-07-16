@@ -102,6 +102,11 @@
                 {% if pedidos %}
                     {% for pedido in pedidos %}
                     <div class="cartao-pedido">
+                        
+                        <form action="{{ url_for('deletar_pedido_rota', id_pedido=pedido.id) }}" method="POST" class="form-excluir" onsubmit="return confirm('Tem certeza que deseja excluir este pedido?');">
+                            <button type="submit" class="btn-excluir">X</button>
+                        </form>
+
                         <div class="pedido-tag-categoria">{{ pedido.categoria }}</div>
                         <p class="pedido-descricao">{{ pedido.descricao }}</p>
                         
@@ -121,7 +126,15 @@
                         
                         <div class="pedido-rodape">
                             <div class="pedido-status-container">
-                                <span class="pedido-tag-status">{{ pedido.status }}</span>
+                                {% set status_class = {
+                                    'Aberto': 'status-aberto',
+                                    'Em analise': 'status-em-analise',
+                                    'Aguardando execução': 'status-aguardando-execucao',
+                                    'Aguardando peça': 'status-aguardando-peca',
+                                    'Concluído': 'status-concluido',
+                                    'Cancelado': 'status-cancelado'
+                                } %}
+                                <span class="pedido-tag-status {{ status_class.get(pedido.status, 'status-aberto') }}">{{ pedido.status }}</span>
                                 <span class="pedido-data">Criado em: {{ pedido.data_criacao }}</span>
                             </div>
                             <span class="pedido-id">ID do Pedido: {{ pedido.id }}</span>
@@ -131,7 +144,17 @@
 
                         <div class="pedido-comentarios">
                             <p class="comentario-titulo">Comentários do Gestor:</p>
-                            <div class="comentario-conteudo"><p>{{ pedido.comentario_gestor }}</p></div>
+                            <div class="comentario-conteudo">
+                                {% if pedido.comentario_gestor %}
+                                    {% for comentario in pedido.comentario_gestor.split('\n') %}
+                                        {% if comentario %}
+                                            <p>{{ comentario }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <p>Nenhum comentário ainda.</p>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     {% endfor %}

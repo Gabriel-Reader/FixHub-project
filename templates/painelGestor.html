@@ -74,14 +74,12 @@
                     </p>
                 </div>
 
-                <!-- {% if pedido.quarto %} • Quarto: {{ pedido.quarto }} {% endif %} -->
-
                 <div class="separador-bottom"></div>
 
                 <div class="container-metadados">
                     <p>Criado em: {{ pedido.data_criacao }}</p>
-                    <p>Morador: user_342333</p>
-                    <p>ID: pedido_17512</p>
+                    <p>Morador: {{ pedido.nome_morador }}</p>
+                    <p>ID: {{ pedido.id }}</p>
                 </div>
 
                 <div class="separador-top"></div>
@@ -91,9 +89,19 @@
                     <img class="imagem-pedido" src="" alt="Foto do problema">
                 </div>
 
-                <div style="display: none;" class="container-comentarios-feitos">
-                    <h4>Comentários:</h4>
-                    <div class="texto-comentarios-feitos"></div>
+                <div class="pedido-comentarios">
+                    <p class="comentario-titulo">Histórico de Comentários:</p>
+                    <div class="comentario-conteudo">
+                        {% if pedido.comentario_gestor %}
+                            {% for comentario in pedido.comentario_gestor.split('\n') %}
+                                {% if comentario %}
+                                    <p>{{ comentario }}</p>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <p>Nenhum comentário ainda.</p>
+                        {% endif %}
+                    </div>
                 </div>
                 <!--  -->
 
@@ -104,7 +112,7 @@
 
                             <div class="container-comentarios">
                                 <label class="label-pedidos">Adicionar Comentário</label>
-                                <textarea class="textarea-comentario" rows="1" placeholder="Adicionar comentário" name="comentario">{{ pedido.comentario_gestor if pedido.comentario_gestor else '' }}</textarea>
+                                <textarea class="textarea-comentario" rows="1" placeholder="Adicionar novo comentário" name="comentario"></textarea>
                             </div>
 
                             
@@ -122,7 +130,15 @@
                             </div>
 
                             <div class="container-tag-status">
-                                <span class="tag-status">{{  pedido.status }}</span>
+                                {% set status_class = {
+                                    'Aberto': 'status-aberto',
+                                    'Em analise': 'status-em-analise',
+                                    'Aguardando execução': 'status-aguardando-execucao',
+                                    'Aguardando peça': 'status-aguardando-peca',
+                                    'Concluído': 'status-concluido',
+                                    'Cancelado': 'status-cancelado'
+                                } %}
+                                <span class="tag-status {{ status_class.get(pedido.status, 'status-aberto') }}">{{ pedido.status }}</span>
                             </div>
 
                         </div>

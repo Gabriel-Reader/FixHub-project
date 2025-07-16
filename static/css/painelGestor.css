@@ -258,13 +258,11 @@ body {
 }
 
 .tag-status {
-    background-color: #facc15;
-    color: #18181b;
     font-weight: 700;
     font-size: 0.8rem;
-    padding: 0.3rem 0.8rem;
+    padding: 0.4rem 0.8rem;
     border-radius: 1rem;
-    border: 2px solid #18181b;
+    border: 1px solid #18181b;
     width: fit-content;
 }
 
@@ -301,6 +299,78 @@ body {
 .btn-atualizar-pedido:hover {
     transform: translate(2px, 2px);
     box-shadow: 2px 2px 0px #18181b;
+}
+
+/* ==================================
+   ESTILOS DINÂMICOS PARA TAGS DE STATUS
+   ================================== */
+
+.tag-status {
+    padding: 0.4rem 0.8rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    font-size: 0.8rem;
+    border: 1px solid #18181b;
+    width: fit-content;
+}
+
+.status-aberto {
+    background-color: #E0F2F7; /* Azul claro */
+    color: #007B8F; /* Azul escuro */
+}
+
+.status-em-analise {
+    background-color: #FFF3E0; /* Laranja claro */
+    color: #E65100; /* Laranja escuro */
+}
+
+.status-aguardando-execucao {
+    background-color: #EDE7F6; /* Roxo claro */
+    color: #673AB7; /* Roxo escuro */
+}
+
+.status-aguardando-peca {
+    background-color: #F5F5F5; /* Cinza claro */
+    color: #616161; /* Cinza escuro */
+}
+
+.status-concluido {
+    background-color: #E8F5E9; /* Verde claro */
+    color: #388E3C; /* Verde escuro */
+}
+
+.status-cancelado {
+    background-color: #FFEBEE; /* Vermelho claro */
+    color: #D32F2F; /* Vermelho escuro */
+}
+
+.pedido-comentarios {
+    margin-bottom: 0.5rem;
+}
+
+
+.comentario-titulo {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #3f3f46;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.comentario-conteudo {
+    background-color: #f4f4f5;
+    border: 2px solid #18181b;
+    padding-top: 0.20rem;
+    padding-left: 0.75rem;
+    padding-right: 0.34rem;
+    padding-bottom: 0.20rem;
+    border-radius: 0.5rem;
+    color: #18181b;
+}
+
+.comentario-conteudo p {
+    font-size: 0.8rem;
+    color: #3f3f46;
 }
 
 /* =====================
