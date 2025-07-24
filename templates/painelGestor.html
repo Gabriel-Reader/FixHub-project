@@ -81,7 +81,7 @@
                 <p class="pedido-descricao-texto">{{ pedido.descricao }}</p>
 
                 <div class="pedido-local-container">
-                    <p class="pedido-local-texto">Local: {{ pedido.local_manuntencao }}</p> {# Corrigido para local_manuntencao #}
+                    <p class="pedido-local-texto">Local: {{ pedido.local }}</p>
                     <p class="pedido-local-detalhes">
                         <span>{% if pedido.casa %} • Casa: {{ pedido.casa }} {% endif %}</span>
                         <span>{% if pedido.quarto %}• Quarto: {{ pedido.quarto }} {% endif %}</span>
@@ -92,9 +92,9 @@
                 <div class="separador-bottom"></div>
 
                 <div class="container-metadados">
-                    <p>Criado em: {{ pedido.criada_em.strftime('%d/%m/%Y %H:%M') if pedido.criada_em else 'N/A' }}</p> {# Formatando a data #}
+                    <p>Criado em: {{ pedido.data_criacao }}</p>
                     <p>Morador: {{ pedido.nome_morador }}</p>
-                    <p>ID: {{ pedido.id_pedido }}</p> {# Corrigido para id_pedido #}
+                    <p>ID: {{ pedido.id }}</p>
                 </div>
 
                 <div class="separador-top"></div>
@@ -122,7 +122,7 @@
 
                 <div class="container-atualizar-pedido">
                     <form action="{{ url_for('atualizar_pedido') }}" method="POST">
-                        <input type="hidden" name="pedido_id" value="{{ pedido.id_pedido }}"> {# Corrigido para id_pedido #}
+                        <input type="hidden" name="pedido_id" value="{{ pedido.id }}">
                         <div class="secao-interacao-pedido">
 
                             <div class="container-comentarios">
@@ -135,10 +135,10 @@
                                 <label class="label-pedidos">Status</label>
                                 <select class="select-status" name="status">
                                     <option value="Aberto" {% if pedido.status == 'Aberto' %}selected{% endif %}>Aberto</option>
-                                    <option value="Em analise" {% if pedido.status == 'Em analise' %}selected{% endif %}>Em análise</option>
-                                    <option value="Aguardando execução" {% if pedido.status == 'Aguardando execução' %}selected{% endif %}>Aguardando execução</option>
-                                    <option value="Aguardando peça" {% if pedido.status == 'Aguardando peça' %}selected{% endif %}>Aguardando peça</option>
-                                    <option value="Concluído" {% if pedido.status == 'Concluído' %}selected{% endif %}>Concluído</option>
+                                    <option value="Em analise" {% if pedido.status == 'Em-analise' %}selected{% endif %}>Em análise</option>
+                                    <option value="Aguardando execução" {% if pedido.status == 'Aguardando-execucao' %}selected{% endif %}>Aguardando execução</option>
+                                    <option value="Aguardando peça" {% if pedido.status == 'Aguardando-peca' %}selected{% endif %}>Aguardando peça</option>
+                                    <option value="Concluído" {% if pedido.status == 'Concluido' %}selected{% endif %}>Concluído</option>
                                     <option value="Cancelado" {% if pedido.status == 'Cancelado' %}selected{% endif %}>Cancelado</option>
                                 </select>
                                 
@@ -172,6 +172,8 @@
         {% endif %}
 
     </section>
+
+    
 
 </body>
 
