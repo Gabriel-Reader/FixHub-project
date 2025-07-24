@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Tela de Cadastro" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/painelGestor.css') }}">
-    <!-- <link rel="stylesheet" href="painelGestor.css" type="text/css"> -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <title>Portal do Gestor</title>
 </head>
@@ -27,30 +26,46 @@
         </header>
 
         <div class="cartao-gestor">
-            <div class="container-filtros">
+            <!-- Formulário para filtragem - método GET -->
+            <form action="{{ url_for('painel_gestor') }}" method="GET" class="container-filtros">
 
                 <div class="item-filtro">
                     <label for="filtro-ceu">Filtrar por Casa (CEU)</label>
-                    <select id="filtro-ceu" class="filtro-select">
-                        <option value="filtro-todas-casas">Todas as Casas</option>
+                    <select id="filtro-ceu" name="casa" class="filtro-select"> {# Adicionado name="casa" #}
+                        <option value="" {% if not filtro_casa %}selected{% endif %}>Todas as Casas</option> {# Valor vazio #}
+                        {% for casa in casas_disponiveis %}
+                        <option value="{{ casa }}" {% if casa == filtro_casa %}selected{% endif %}>CEU {{ casa }}</option>
+                        {% endfor %}
                     </select>
                 </div>
 
                 <div class="item-filtro">
                     <label for="filtro-categoria">Filtrar por Categoria</label>
-                    <select id="filtro-categoria" class="filtro-select">
-                        <option value="filtro-todas-categoria">Todas as Categorias</option>
+                    <select id="filtro-categoria" name="categoria" class="filtro-select"> {# Adicionado name="categoria" #}
+                        <option value="" {% if not filtro_categoria %}selected{% endif %}>Todas as Categorias</option> {# Valor vazio #}
+                        {% for categoria in categorias_disponiveis %}
+                        <option value="{{ categoria }}" {% if categoria == filtro_categoria %}selected{% endif %}>{{ categoria }}</option>
+                        {% endfor %}
                     </select>
                 </div>
 
                 <div class="item-filtro">
-                    <label for="filtro-ordenar-por">Ordenar por</label>
-                    <select id="filtro-ordenar-por" class="filtro-select">
-                        <option value="filtro-recentes">Mais Recentes</option>
-                        <option value="filtro-status">Status</option>
+                    <label for="filtro-status">Filtrar por Status</label> {# Novo filtro de status #}
+                    <select id="filtro-status" name="status" class="filtro-select"> {# Adicionado name="status" #}
+                        <option value="" {% if not filtro_status %}selected{% endif %}>Todos os Status</option>
+                        <option value="Aberto" {% if filtro_status == 'Aberto' %}selected{% endif %}>Aberto</option>
+                        <option value="Em analise" {% if filtro_status == 'Em analise' %}selected{% endif %}>Em análise</option>
+                        <option value="Aguardando execução" {% if filtro_status == 'Aguardando execução' %}selected{% endif %}>Aguardando execução</option>
+                        <option value="Aguardando peça" {% if filtro_status == 'Aguardando peça' %}selected{% endif %}>Aguardando peça</option>
+                        <option value="Concluído" {% if filtro_status == 'Concluído' %}selected{% endif %}>Concluído</option>
+                        <option value="Cancelado" {% if filtro_status == 'Cancelado' %}selected{% endif %}>Cancelado</option>
                     </select>
                 </div>
-            </div>
+                
+                <button type="submit" class="btn-atualizar-pedido">
+                            Aplicar Filtro
+                        </button>
+            </form>
 
         </div>
 
@@ -66,7 +81,7 @@
                 <p class="pedido-descricao-texto">{{ pedido.descricao }}</p>
 
                 <div class="pedido-local-container">
-                    <p class="pedido-local-texto">Local: {{ pedido.local }}</p>
+                    <p class="pedido-local-texto">Local: {{ pedido.local_manuntencao }}</p> {# Corrigido para local_manuntencao #}
                     <p class="pedido-local-detalhes">
                         <span>{% if pedido.casa %} • Casa: {{ pedido.casa }} {% endif %}</span>
                         <span>{% if pedido.quarto %}• Quarto: {{ pedido.quarto }} {% endif %}</span>
@@ -77,9 +92,9 @@
                 <div class="separador-bottom"></div>
 
                 <div class="container-metadados">
-                    <p>Criado em: {{ pedido.data_criacao }}</p>
+                    <p>Criado em: {{ pedido.criada_em.strftime('%d/%m/%Y %H:%M') if pedido.criada_em else 'N/A' }}</p> {# Formatando a data #}
                     <p>Morador: {{ pedido.nome_morador }}</p>
-                    <p>ID: {{ pedido.id }}</p>
+                    <p>ID: {{ pedido.id_pedido }}</p> {# Corrigido para id_pedido #}
                 </div>
 
                 <div class="separador-top"></div>
@@ -107,7 +122,7 @@
 
                 <div class="container-atualizar-pedido">
                     <form action="{{ url_for('atualizar_pedido') }}" method="POST">
-                        <input type="hidden" name="pedido_id" value="{{ pedido.id }}">
+                        <input type="hidden" name="pedido_id" value="{{ pedido.id_pedido }}"> {# Corrigido para id_pedido #}
                         <div class="secao-interacao-pedido">
 
                             <div class="container-comentarios">
@@ -120,10 +135,10 @@
                                 <label class="label-pedidos">Status</label>
                                 <select class="select-status" name="status">
                                     <option value="Aberto" {% if pedido.status == 'Aberto' %}selected{% endif %}>Aberto</option>
-                                    <option value="Em analise" {% if pedido.status == 'Em-analise' %}selected{% endif %}>Em análise</option>
-                                    <option value="Aguardando execução" {% if pedido.status == 'Aguardando-execucao' %}selected{% endif %}>Aguardando execução</option>
-                                    <option value="Aguardando peça" {% if pedido.status == 'Aguardando-peca' %}selected{% endif %}>Aguardando peça</option>
-                                    <option value="Concluído" {% if pedido.status == 'Concluido' %}selected{% endif %}>Concluído</option>
+                                    <option value="Em analise" {% if pedido.status == 'Em analise' %}selected{% endif %}>Em análise</option>
+                                    <option value="Aguardando execução" {% if pedido.status == 'Aguardando execução' %}selected{% endif %}>Aguardando execução</option>
+                                    <option value="Aguardando peça" {% if pedido.status == 'Aguardando peça' %}selected{% endif %}>Aguardando peça</option>
+                                    <option value="Concluído" {% if pedido.status == 'Concluído' %}selected{% endif %}>Concluído</option>
                                     <option value="Cancelado" {% if pedido.status == 'Cancelado' %}selected{% endif %}>Cancelado</option>
                                 </select>
                                 
@@ -157,8 +172,6 @@
         {% endif %}
 
     </section>
-
-    
 
 </body>
 

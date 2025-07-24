@@ -68,26 +68,73 @@ def mostrar_pedidos_morador(id_morador):
     cursor_obj.close()
     return pedidos
 
-
-def mostrar_pedidos_gestor():
+def mostrar_pedidos_gestor(filtro_casa=None, filtro_categoria=None, filtro_status=None, ordenar_por='recentes'):
     cursor_obj = conn.cursor()
-    cursor_obj.execute(
-        """
-            SELECT p.*, m.nome AS nome_morador
-            FROM pedidos p
-            JOIN morador m ON p.id_morador = m.id_morador
+    sql = """
+        SELECT p.*, m.nome AS nome_morador
+        FROM pedidos p
+        JOIN morador m ON p.id_morador = m.id_morador
+    """
+    parametros = []
+    where_clauses = []
+
+    # Adiciona cláusulas WHERE com base nos filtros fornecidos
+    if filtro_casa:
+        where_clauses.append("p.casa = %s")
+        parametros.append(filtro_casa)
+    if filtro_categoria:
+        where_clauses.append("p.categoria = %s")
+        parametros.append(filtro_categoria)
+    if filtro_status:
+        where_clauses.append("p.status = %s")
+        parametros.append(filtro_status)
+
+    # Constrói a cláusula WHERE final
+    if where_clauses:
+        sql += " WHERE " + " AND ".join(where_clauses)
+
+    # Adiciona a cláusula ORDER BY com base na opção de ordenação
+    if ordenar_por == 'status':
+        sql += """
             ORDER BY
             CASE
-                WHEN p.status = 'Concluido' THEN 1
+                WHEN p.status = 'Concluído' THEN 1
                 ELSE 0
             END,
             p.criada_em ASC
         """
-    )
+    else: # Padrão: 'recentes'
+        sql += " ORDER BY p.criada_em DESC" # Ordena por data de criação decrescente (mais recentes primeiro)
+
+    cursor_obj.execute(sql, tuple(parametros))
     pedidos = cursor_obj.fetchall()
-    cursor_obj.close()
+    cursor_obj.close() # Garante que o cursor seja fechado antes do retorno
     return pedidos
 
+
+def obter_filtros_disponiveis():
+    """
+    Busca todas as casas (CEU) e categorias únicas existentes no banco de dados
+    para popular os dropdowns de filtro no frontend.
+
+    Returns:
+        tuple: Uma tupla contendo duas listas: (casas_disponiveis, categorias_disponiveis).
+               Retorna listas vazias em caso de erro.
+    """
+    cursor_obj = conn.cursor()
+    casas = []
+    categorias = []
+    
+    # Busca casas únicas da tabela 'morador'
+    cursor_obj.execute("SELECT DISTINCT ceu_casa FROM morador WHERE ceu_casa IS NOT NULL ORDER BY ceu_casa ASC")
+    casas = [row[0] for row in cursor_obj.fetchall()]
+
+    # Busca categorias únicas da tabela 'pedidos'
+    cursor_obj.execute("SELECT DISTINCT categoria FROM pedidos WHERE categoria IS NOT NULL ORDER BY categoria ASC")
+    categorias = [row[0] for row in cursor_obj.fetchall()]
+    
+    cursor_obj.close() # Garante que o cursor seja fechado antes do retorno
+    return casas, categorias
 
 def alterar_status_pedido(id_pedido, novo_status):
     cursor_obj = conn.cursor()

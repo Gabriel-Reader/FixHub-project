@@ -15,8 +15,8 @@ def obter_dados_pedido():
 
 def obter_dados_cadastro():
     c_usuario = request.form.get('c_usuario').strip()
-    c_email = request.form.get('c_email').strip()
     c_senha = request.form.get('c_senha').strip()
+    c_email = request.form.get('c_email').strip()
     c_quarto = request.form.get('c_quarto').strip()
     c_casa = request.form.get('c_casa').strip()
 
