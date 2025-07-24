@@ -15,12 +15,12 @@ def obter_dados_pedido():
 
 def obter_dados_cadastro():
     c_usuario = request.form.get('c_usuario').strip()
-    c_email = request.form.get('c_email').strip()
     c_senha = request.form.get('c_senha').strip()
+    c_email = request.form.get('c_email').strip()
     c_quarto = request.form.get('c_quarto').strip()
     c_casa = request.form.get('c_casa').strip()
 
-    return [c_usuario, c_email, c_senha, c_quarto, c_casa]
+    return [c_usuario, c_senha,c_email, c_quarto, c_casa]
 
 def obter_dados_login():
     usuario = request.form.get('usuario').strip()
