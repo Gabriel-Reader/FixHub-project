@@ -4,6 +4,7 @@
 
 # Importações de bibliotecas Flask e módulos internos
 from flask import Flask, request, render_template, flash, redirect, url_for, session
+from datetime import timedelta
 from services.manipular_database import (
     criar_usuario, verificar_login, criar_pedido, 
     mostrar_pedidos_morador, mostrar_pedidos_gestor, 
@@ -18,6 +19,9 @@ from utils.manipular_forms import obter_dados_pedido, obter_dados_cadastro, obte
 # Instanciação da aplicação Flask e configuração da chave s. para sessões
 app = Flask(__name__)
 app.secret_key = 'd2ccd1731dc1cca262d6c889e3352a921f973db9698cc4ba'
+
+# Configuração de expiração da sessão (ex: 30 minutos de inatividade)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 
 # -----------------------------
@@ -39,6 +43,7 @@ def tela_login():
 
             # Login bem-sucedido: cria sessão do usuário
             session.clear()
+            session.permanent = True  # Ativa a expiração baseada no PERMANENT_SESSION_LIFETIME
             session['user_id'] = id_morador_db
             session['username'] = nome_db
             session['ceu'] = ceu_casa_db
