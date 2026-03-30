@@ -132,10 +132,10 @@
                                 <label class="label-pedidos">Status</label>
                                 <select class="select-status" name="status">
                                     <option value="Aberto" {% if pedido.status == 'Aberto' %}selected{% endif %}>Aberto</option>
-                                    <option value="Em analise" {% if pedido.status == 'Em-analise' %}selected{% endif %}>Em análise</option>
-                                    <option value="Aguardando execução" {% if pedido.status == 'Aguardando-execucao' %}selected{% endif %}>Aguardando execução</option>
-                                    <option value="Aguardando peça" {% if pedido.status == 'Aguardando-peca' %}selected{% endif %}>Aguardando peça</option>
-                                    <option value="Concluído" {% if pedido.status == 'Concluido' %}selected{% endif %}>Concluído</option>
+                                    <option value="Em analise" {% if pedido.status == 'Em analise' %}selected{% endif %}>Em análise</option>
+                                    <option value="Aguardando execução" {% if pedido.status == 'Aguardando execução' %}selected{% endif %}>Aguardando execução</option>
+                                    <option value="Aguardando peça" {% if pedido.status == 'Aguardando peça' %}selected{% endif %}>Aguardando peça</option>
+                                    <option value="Concluído" {% if pedido.status == 'Concluído' %}selected{% endif %}>Concluído</option>
                                     <option value="Cancelado" {% if pedido.status == 'Cancelado' %}selected{% endif %}>Cancelado</option>
                                 </select>
                             </div>

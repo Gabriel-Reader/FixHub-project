@@ -62,13 +62,14 @@ def mostrar_pedidos_morador(id_morador):
         """
             SELECT * FROM pedidos
             WHERE id_morador = %s
+            ORDER BY criada_em DESC
         """, (id_morador,)
     )
     pedidos = cursor_obj.fetchall()
     cursor_obj.close()
     return pedidos
 
-def mostrar_pedidos_representante(filtro_casa=None):
+def mostrar_pedidos_representante(filtro_casa=None, filtro_status=None):
     cursor_obj = conn.cursor()
     sql = """
         SELECT p.*, m.nome AS nome_morador
@@ -76,7 +77,18 @@ def mostrar_pedidos_representante(filtro_casa=None):
         JOIN morador m ON p.id_morador = m.id_morador
     """
     parametros = []
-    where_clauses = ["p.status IN ('Aguardando Representante', 'Recusado pelo Representante')"]
+    
+    # O Representante vê pedidos pendentes, recusados e os aprovados (Aberto)
+    where_clauses = []
+    
+    if filtro_status:
+        # Mapeamento de filtros amigáveis para status reais
+        if filtro_status == 'pendente':
+            where_clauses.append("p.status = 'Aguardando Representante'")
+        elif filtro_status == 'aprovado':
+            where_clauses.append("p.status NOT IN ('Aguardando Representante', 'Recusado pelo Representante')")
+        elif filtro_status == 'recusado':
+            where_clauses.append("p.status = 'Recusado pelo Representante'")
 
     if filtro_casa:
         where_clauses.append("p.casa = %s")

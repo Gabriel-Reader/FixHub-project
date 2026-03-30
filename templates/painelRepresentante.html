@@ -23,7 +23,23 @@
         .btn-recusar { background-color: #f59e0b; color: white; }
         .btn-deletar { background-color: #ef4444; color: white; }
         .btn-acao:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0px #18181b; }
-        .container-acoes { display: flex; margin-top: 1rem; }
+        .container-acoes { display: flex; flex-direction: column; margin-top: 1rem; border-top: 1px solid #e5e7eb; padding-top: 1rem; }
+        
+        /* Cores de borda para estados respondidos */
+        .cartao-aprovado { border-color: #22c55e !important; box-shadow: 6px 6px 0px #22c55e !important; }
+        .cartao-recusado { border-color: #ef4444 !important; box-shadow: 6px 6px 0px #ef4444 !important; }
+        
+        .tag-status-rep {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .status-pendente { background-color: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+        .status-aprovado { background-color: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .status-recusado { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
     </style>
 </head>
 
@@ -41,7 +57,7 @@
     <section id="sectionRepresentante" class="section-gestor">
 
         <header class="cabecalho-section">
-            <h1>Pedidos para Validação</h1>
+            <h1>Gerenciamento de Pedidos</h1>
         </header>
 
         <div class="cartao-gestor">
@@ -55,15 +71,41 @@
                         {% endfor %}
                     </select>
                 </div>
-                <button type="submit" class="btn-atualizar-pedido">Aplicar Filtro</button>
+
+                <div class="item-filtro">
+                    <label for="filtro-status">Filtrar por Status</label>
+                    <select id="filtro-status" name="status" class="filtro-select">
+                        <option value="" {% if not filtro_status %}selected{% endif %}>Todos os Pedidos</option>
+                        <option value="pendente" {% if filtro_status == 'pendente' %}selected{% endif %}>Apenas Pendentes</option>
+                        <option value="aprovado" {% if filtro_status == 'aprovado' %}selected{% endif %}>Apenas Aprovados</option>
+                        <option value="recusado" {% if filtro_status == 'recusado' %}selected{% endif %}>Apenas Recusados</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-atualizar-pedido">Aplicar Filtros</button>
             </form>
         </div>
 
         {% if pedidos %}
             {% for pedido in pedidos %}
-            <div class="pedidos-gestor">
-                <div class="pedido-categoria-tag">
-                    <span class="pedido-categoria-texto">{{ pedido.categoria }}</span>
+            
+            {% set eh_concluido = pedido.status == 'Concluído' %}
+            {% set eh_negado = pedido.status == 'Recusado pelo Representante' or pedido.status == 'Cancelado' %}
+            {% set eh_pendente = pedido.status == 'Aguardando Representante' %}
+            
+            <div class="pedidos-gestor {{ 'cartao-aprovado' if eh_concluido }} {{ 'cartao-recusado' if eh_negado }}">
+                
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div class="pedido-categoria-tag">
+                        <span class="pedido-categoria-texto">{{ pedido.categoria }}</span>
+                    </div>
+                    
+                    <span class="tag-status-rep {{ 'status-pendente' if eh_pendente }} {{ 'status-aprovado' if eh_concluido or (not eh_negado and not eh_pendente) }} {{ 'status-recusado' if eh_negado }}">
+                        {% if eh_pendente %} Aguardando Validação
+                        {% elif eh_negado %} Rejeitado ({{ pedido.status }})
+                        {% else %} Aprovado ({{ pedido.status }})
+                        {% endif %}
+                    </span>
                 </div>
 
                 <p class="pedido-descricao-texto">{{ pedido.descricao }}</p>
@@ -80,27 +122,84 @@
                 <div class="container-metadados">
                     <p>Criado em: {{ pedido.data_criacao }}</p>
                     <p>Morador: {{ pedido.nome_morador }}</p>
-                    <p>Status Atual: <strong>{{ pedido.status }}</strong></p>
                 </div>
 
-                <div class="container-acoes">
-                    <form action="{{ url_for('acao_representante') }}" method="POST">
+                <!-- Container de Ações (Visível se pendente ou se clicou em editar) -->
+                <div id="form-acoes-{{ pedido.id }}" class="container-acoes" style="{{ 'display: flex;' if eh_pendente else 'display: none;' }}">
+                    <form action="{{ url_for('acao_representante') }}" method="POST" style="width: 100%;">
                         <input type="hidden" name="pedido_id" value="{{ pedido.id }}">
-                        <button type="submit" name="acao" value="aprovar" class="btn-acao btn-aprovar">Aprovar</button>
-                        <button type="submit" name="acao" value="recusar" class="btn-acao btn-recusar">Recusar</button>
-                        <button type="submit" name="acao" value="deletar" class="btn-acao btn-deletar" onclick="return confirm('Tem certeza que deseja deletar permanentemente este pedido?')">Deletar</button>
+                        
+                        <label for="comentario-{{ pedido.id }}" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem;">Motivo/Observação (Opcional):</label>
+                        <textarea id="comentario-{{ pedido.id }}" name="comentario" placeholder="Escreva o motivo da decisão ou observação..." 
+                                  style="width: 100%; min-height: 60px; border-radius: 0.5rem; border: 2px solid #18181b; padding: 0.5rem; font-family: inherit; margin-bottom: 0.8rem;"></textarea>
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <button type="submit" name="acao" value="aprovar" class="btn-acao btn-aprovar">Aprovar</button>
+                                <button type="submit" name="acao" value="recusar" class="btn-acao btn-recusar">Recusar</button>
+                                <button type="submit" name="acao" value="deletar" class="btn-acao btn-deletar" onclick="return confirm('Tem certeza que deseja deletar permanentemente este pedido?')">Deletar</button>
+                            </div>
+                            
+                            {% if not eh_pendente %}
+                            <button type="button" onclick="toggleEdicao({{ pedido.id }})" style="background: none; border: none; color: #6b7280; cursor: pointer; text-decoration: underline; font-size: 0.85rem;">Cancelar</button>
+                            {% endif %}
+                        </div>
                     </form>
                 </div>
+
+                <!-- Container de Status/Histórico (Visível se já respondido) -->
+                {% if not eh_pendente %}
+                <div id="view-status-{{ pedido.id }}" class="pedido-comentarios" style="margin-top: 1rem; border-top: 1px solid #eee; padding-top: 0.5rem; position: relative;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <p class="comentario-titulo">Histórico/Ações realizadas:</p>
+                        
+                        {# O representante só pode editar se o pedido ainda não foi finalizado pelo gestor #}
+                        {% if pedido.status != 'Concluído' and pedido.status != 'Cancelado' %}
+                        <button type="button" onclick="toggleEdicao({{ pedido.id }})" title="Editar decisão" 
+                                style="background: none; border: none; cursor: pointer; font-size: 1.1rem; opacity: 0.6; transition: opacity 0.2s;"
+                                onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+                            ✏️
+                        </button>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="comentario-conteudo">
+                        {% if pedido.comentario_gestor %}
+                            {% for comentario in pedido.comentario_gestor.split('\n') %}
+                                {% if comentario %}
+                                    <p>{{ comentario }}</p>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <p>Sem observações registradas.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
             </div>
             {% endfor %}
         {% else %}
             <div class="text_sem-pedidos">
-                <p>Nenhum pedido aguardando validação.</p>
+                <p>Nenhum pedido encontrado com os filtros selecionados.</p>
             </div>
         {% endif %}
 
     </section>
 
+    <script>
+        function toggleEdicao(id) {
+            const form = document.getElementById('form-acoes-' + id);
+            const view = document.getElementById('view-status-' + id);
+            
+            if (form.style.display === 'none') {
+                form.style.display = 'flex';
+                if (view) view.style.display = 'none';
+            } else {
+                form.style.display = 'none';
+                if (view) view.style.display = 'block';
+            }
+        }
+    </script>
     <script src="{{ url_for('static', filename='js/dark-mode.js') }}"></script>
 </body>
 </html>

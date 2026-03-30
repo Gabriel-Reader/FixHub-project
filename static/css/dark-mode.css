@@ -122,3 +122,16 @@ body.dark-mode {
     box-shadow: 3px 3px 0px #18181b;
     color: #18181b;
 }
+
+/* =====================
+   Responsividade
+   ===================== */
+@media (max-width: 768px) {
+    #darkmodeID {
+        top: 0.5rem;
+        right: 0.5rem;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
+

@@ -158,3 +158,62 @@ input[type=number] {
 .link-login:hover {
     text-decoration: underline;
 }
+
+/* =====================
+   Responsividade (Otimizada para Mobile)
+   ===================== */
+@media (max-width: 640px) {
+    body {
+        padding: 1rem 0.75rem;
+        align-items: flex-start;
+    }
+
+    .cadastro-container {
+        width: 100%;
+    }
+
+    .cartao-cadastro {
+        padding: 1.5rem 1.25rem;
+        box-shadow: 4px 4px 0px #18181b;
+        border-radius: 0.75rem;
+    }
+
+    .cabecalho-cartao h1 {
+        font-size: 1.6rem;
+    }
+
+    .formulario-cadastro {
+        gap: 1.5rem;
+    }
+
+    .itens-linha {
+        flex-direction: column;
+        gap: 1.5rem; /* Espaço igual entre todos os campos empilhados */
+    }
+
+    .item-formulario label {
+        font-size: 0.95rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .item-formulario select,
+    .item-formulario input {
+        padding: 1rem;
+        font-size: 16px;
+        min-height: 3.2rem;
+    }
+
+    .btn-criarConta {
+        padding: 1rem;
+        font-size: 1.1rem;
+        min-height: 3.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .link-login {
+        margin-top: 2rem;
+        padding: 0.5rem;
+    }
+}
+
+

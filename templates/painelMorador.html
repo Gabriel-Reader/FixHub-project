@@ -8,6 +8,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <title>Portal do Morador</title>
+    <style>
+        /* Cores de borda para estados dos pedidos */
+        .cartao-aprovado { border-color: #22c55e !important; box-shadow: 6px 6px 0px #22c55e !important; }
+        .cartao-recusado { border-color: #ef4444 !important; box-shadow: 6px 6px 0px #ef4444 !important; }
+        
+        /* Dark mode compatibility for the new borders */
+        body.dark-mode .cartao-aprovado { border-color: #4ade80 !important; box-shadow: 6px 6px 0px #4ade80 !important; }
+        body.dark-mode .cartao-recusado { border-color: #f87171 !important; box-shadow: 6px 6px 0px #f87171 !important; }
+    </style>
 </head>
 
 <body>
@@ -101,7 +110,11 @@
             <div class="cartao-pedidos">
                 {% if pedidos %}
                     {% for pedido in pedidos %}
-                    <div class="cartao-pedido">
+                    
+                    {% set eh_concluido = pedido.status == 'Concluído' %}
+                    {% set eh_negado = pedido.status == 'Recusado pelo Representante' or pedido.status == 'Cancelado' %}
+
+                    <div class="cartao-pedido {{ 'cartao-aprovado' if eh_concluido }} {{ 'cartao-recusado' if eh_negado }}">
                         
                         <form action="{{ url_for('deletar_pedido_rota', id_pedido=pedido.id) }}" method="POST" class="form-excluir" onsubmit="return confirm('Tem certeza que deseja excluir este pedido?');">
                             <button type="submit" class="btn-excluir">X</button>
@@ -132,7 +145,9 @@
                                     'Aguardando execução': 'status-aguardando-execucao',
                                     'Aguardando peça': 'status-aguardando-peca',
                                     'Concluído': 'status-concluido',
-                                    'Cancelado': 'status-cancelado'
+                                    'Cancelado': 'status-cancelado',
+                                    'Recusado pelo Representante': 'status-cancelado',
+                                    'Aguardando Representante': 'status-aguardando-peca'
                                 } %}
                                 <span class="pedido-tag-status {{ status_class.get(pedido.status, 'status-aberto') }}">{{ pedido.status }}</span>
                                 <span class="pedido-data">Criado em: {{ pedido.data_criacao }}</span>
@@ -143,7 +158,7 @@
                         <hr class="pedido-divisor">
 
                         <div class="pedido-comentarios">
-                            <p class="comentario-titulo">Comentários do Gestor:</p>
+                            <p class="comentario-titulo">Histórico de Comentários e Feedback:</p>
                             <div class="comentario-conteudo">
                                 {% if pedido.comentario_gestor %}
                                     {% for comentario in pedido.comentario_gestor.split('\n') %}

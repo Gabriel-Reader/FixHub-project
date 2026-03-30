@@ -145,7 +145,12 @@ def painel_representante():
             return redirect(url_for('unauthorized'))
 
         filtro_casa = request.args.get('casa', '')
-        pedidos_tuplas = mostrar_pedidos_representante(filtro_casa=filtro_casa if filtro_casa else None)
+        filtro_status = request.args.get('status', '')
+        
+        pedidos_tuplas = mostrar_pedidos_representante(
+            filtro_casa=filtro_casa if filtro_casa else None,
+            filtro_status=filtro_status if filtro_status else None
+        )
         pedidos = converter_pedidos_para_dicionario(pedidos_tuplas)
         
         casas_disponiveis, _ = obter_filtros_disponiveis()
@@ -156,7 +161,8 @@ def painel_representante():
             pedidos=pedidos,
             nome_usuario=nome_usuario,
             casas_disponiveis=casas_disponiveis,
-            filtro_casa=filtro_casa
+            filtro_casa=filtro_casa,
+            filtro_status=filtro_status
         )
     else:
         return redirect(url_for('unauthorized'))
@@ -171,6 +177,11 @@ def acao_representante():
     if 'user_id' in session and verifica_representante(session.get('username')):
         pedido_id = request.form.get('pedido_id')
         acao = request.form.get('acao') # 'aprovar', 'recusar', 'deletar'
+        comentario = request.form.get('comentario')
+
+        # Se houver comentário, salva no histórico
+        if comentario:
+            comentario_gestor(pedido_id, f"[REPRESENTANTE]: {comentario}")
 
         if acao == 'aprovar':
             alterar_status_pedido(pedido_id, 'Aberto')

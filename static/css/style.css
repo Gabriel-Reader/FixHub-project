@@ -161,3 +161,53 @@ body {
     margin: 0;
     padding: 0;
 }
+
+/* =====================
+   Responsividade (Otimizada para Mobile)
+   ===================== */
+@media (max-width: 640px) {
+    body {
+        padding: 1.25rem 0.75rem;
+        align-items: flex-start; /* Permite scroll natural se o teclado abrir */
+    }
+
+    .login-container {
+        width: 100%;
+    }
+
+    .cartao-login {
+        padding: 1.5rem 1.25rem;
+        box-shadow: 4px 4px 0px #18181b;
+        border-radius: 0.75rem;
+    }
+
+    .cabecalho-login h1 {
+        font-size: 1.6rem;
+    }
+
+    .login-formulario {
+        gap: 1.5rem; /* Mais espaço entre grupos */
+    }
+
+    .item-formulario label {
+        font-size: 0.95rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .item-formulario input {
+        padding: 1rem; /* Campo mais alto para toque */
+        font-size: 16px; /* Evita zoom forçado no iOS */
+        min-height: 3.2rem;
+    }
+
+    .btn {
+        padding: 1rem;
+        font-size: 1.1rem;
+        min-height: 3.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .divider {
+        margin: 2rem 0;
+    }
+}

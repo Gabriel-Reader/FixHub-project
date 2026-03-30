@@ -301,7 +301,8 @@ textarea {
     font-size: 1rem;
     font-family: inherit;
     padding: 0.88rem 1rem;
-    /* appearance: none; */
+    box-sizing: border-box; /* Garante que padding não aumente a largura */
+    width: 100%; /* Ocupa toda a largura disponível */
 }
 
 .item-formulario select:focus,
@@ -317,11 +318,11 @@ textarea {
 }
 
 .item-formulario textarea {
-    min-height: 60px;
-    max-height: 200px;
-    max-width: 96%;
-    min-width: 96%;
+    min-height: 80px;
+    max-height: 300px;
+    resize: vertical; /* Permite redimensionar apenas verticalmente */
 }
+
 
 /* Remove as setas no Chrome, Safari, Edge e Opera para input type number */
 input[type=number]::-webkit-outer-spin-button,
@@ -431,7 +432,83 @@ button {
     color: #388E3C; /* Verde escuro */
 }
 
-.status-cancelado {
-    background-color: #FFEBEE; /* Vermelho claro */
-    color: #D32F2F; /* Vermelho escuro */
+/* =====================
+   Responsividade (Otimizada para Mobile)
+   ===================== */
+@media (max-width: 768px) {
+    .header-painel {
+        justify-content: center;
+        padding: 1.25rem 0.75rem;
+    }
+
+    .info-usuario {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .cabecalho-section {
+        font-size: 1.6rem;
+        margin-bottom: 2rem;
+    }
+
+    .cartao-morador {
+        padding: 1.25rem;
+        border-radius: 0.75rem;
+    }
+
+    .formulario-morador {
+        gap: 1.5rem;
+    }
+
+    .itens-linha {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .item-formulario label {
+        font-size: 0.95rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .item-formulario select,
+    .item-formulario input,
+    textarea {
+        padding: 1rem;
+        font-size: 16px;
+        min-height: 3.2rem;
+    }
+
+    .btn-enviarPedido {
+        padding: 1.1rem;
+        font-size: 1.1rem;
+        min-height: 3.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .cabecalho-meusPedidos {
+        font-size: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .cartao-pedido {
+        padding: 1.25rem;
+        box-shadow: 4px 4px 0px #18181b;
+    }
+
+    .pedido-rodape {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 0.5rem;
+    }
+
+    .cartao-morador, .cartao-pedido, .texto-semPedidos {
+        box-shadow: 4px 4px 0px #18181b;
+    }
 }
