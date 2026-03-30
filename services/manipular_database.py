@@ -68,6 +68,30 @@ def mostrar_pedidos_morador(id_morador):
     cursor_obj.close()
     return pedidos
 
+def mostrar_pedidos_representante(filtro_casa=None):
+    cursor_obj = conn.cursor()
+    sql = """
+        SELECT p.*, m.nome AS nome_morador
+        FROM pedidos p
+        JOIN morador m ON p.id_morador = m.id_morador
+    """
+    parametros = []
+    where_clauses = ["p.status IN ('Aguardando Representante', 'Recusado pelo Representante')"]
+
+    if filtro_casa:
+        where_clauses.append("p.casa = %s")
+        parametros.append(filtro_casa)
+
+    if where_clauses:
+        sql += " WHERE " + " AND ".join(where_clauses)
+    
+    sql += " ORDER BY p.criada_em DESC"
+
+    cursor_obj.execute(sql, tuple(parametros))
+    pedidos = cursor_obj.fetchall()
+    cursor_obj.close()
+    return pedidos
+
 def mostrar_pedidos_gestor(filtro_casa=None, filtro_categoria=None, filtro_status=None, ordenar_por='recentes'):
     cursor_obj = conn.cursor()
     sql = """
@@ -76,7 +100,8 @@ def mostrar_pedidos_gestor(filtro_casa=None, filtro_categoria=None, filtro_statu
         JOIN morador m ON p.id_morador = m.id_morador
     """
     parametros = []
-    where_clauses = []
+    # O Gestor só vê pedidos que JÁ passaram pelo representante
+    where_clauses = ["p.status NOT IN ('Aguardando Representante', 'Recusado pelo Representante')"]
 
     # Adiciona cláusulas WHERE com base nos filtros fornecidos
     if filtro_casa:

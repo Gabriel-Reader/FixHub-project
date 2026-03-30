@@ -4,8 +4,13 @@
 
 # Importações de bibliotecas Flask e módulos internos
 from flask import Flask, request, render_template, flash, redirect, url_for, session
-from services.manipular_database import criar_usuario, verificar_login, criar_pedido, mostrar_pedidos_morador, mostrar_pedidos_gestor, alterar_status_pedido, comentario_gestor, deletar_pedido, obter_filtros_disponiveis
-from utils.validacoes import validar_email, validar_password, validar_username, verifica_gestor
+from services.manipular_database import (
+    criar_usuario, verificar_login, criar_pedido, 
+    mostrar_pedidos_morador, mostrar_pedidos_gestor, 
+    mostrar_pedidos_representante, alterar_status_pedido, 
+    comentario_gestor, deletar_pedido, obter_filtros_disponiveis
+)
+from utils.validacoes import validar_email, validar_password, validar_username, verifica_gestor, verifica_representante
 from utils.utilitarios import converter_pedidos_para_dicionario
 from utils.manipular_forms import obter_dados_pedido, obter_dados_cadastro, obter_dados_login, obter_atualizacao_pedido
 
@@ -17,7 +22,7 @@ app.secret_key = 'd2ccd1731dc1cca262d6c889e3352a921f973db9698cc4ba'
 
 # -----------------------------
 # Rota principal: Tela de login
-# Permite login de usuários e redireciona conforme o tipo (gestor ou morador)
+# Permite login de usuários e redireciona conforme o tipo
 # -----------------------------
 @app.route('/', methods=['GET', 'POST'])
 def tela_login():
@@ -41,6 +46,8 @@ def tela_login():
             # Redireciona para o painel adequado
             if verifica_gestor(nome_db):
                 return redirect(url_for('painel_gestor'))
+            elif verifica_representante(nome_db):
+                return redirect(url_for('painel_representante'))
             else:
                 return redirect(url_for('painel_morador'))
 
@@ -92,14 +99,17 @@ def tela_cadastro():
 
 
 # -----------------------------
-# Rota do painel do morador: permite visualizar, criar e remover pedidos
+# Rota do painel do morador
 # -----------------------------
 @app.route('/painel-morador', methods=['GET', 'POST'])
 def painel_morador():
     if 'user_id' in session:
-        # Verifica se o usuário logado NÃO é um gestor
-        if verifica_gestor(session.get('username')):
+        username = session.get('username')
+        # Verifica se o usuário logado NÃO é um gestor ou representante
+        if verifica_gestor(username):
             return redirect(url_for('painel_gestor'))
+        if verifica_representante(username):
+            return redirect(url_for('painel_representante'))
 
         # Usuário autenticado
         if request.method == 'POST':
@@ -126,7 +136,64 @@ def painel_morador():
 
 
 # -----------------------------
-# Rota do painel do gestor: visualiza e atualiza todos os pedidos
+# Rota do painel do representante
+# -----------------------------
+@app.route('/painel-representante', methods=['GET'])
+def painel_representante():
+    if 'user_id' in session:
+        if not verifica_representante(session.get('username')):
+            return redirect(url_for('unauthorized'))
+
+        filtro_casa = request.args.get('casa', '')
+        pedidos_tuplas = mostrar_pedidos_representante(filtro_casa=filtro_casa if filtro_casa else None)
+        pedidos = converter_pedidos_para_dicionario(pedidos_tuplas)
+        
+        casas_disponiveis, _ = obter_filtros_disponiveis()
+        nome_usuario = session.get('username')
+
+        return render_template(
+            'painelRepresentante.html',
+            pedidos=pedidos,
+            nome_usuario=nome_usuario,
+            casas_disponiveis=casas_disponiveis,
+            filtro_casa=filtro_casa
+        )
+    else:
+        return redirect(url_for('unauthorized'))
+
+
+
+# -----------------------------
+# Rota para o representante aprovar ou recusar pedido
+# -----------------------------
+@app.route('/acao-representante', methods=['POST'])
+def acao_representante():
+    if 'user_id' in session and verifica_representante(session.get('username')):
+        pedido_id = request.form.get('pedido_id')
+        acao = request.form.get('acao') # 'aprovar', 'recusar', 'deletar'
+
+        if acao == 'aprovar':
+            alterar_status_pedido(pedido_id, 'Aberto')
+        elif acao == 'recusar':
+            alterar_status_pedido(pedido_id, 'Recusado pelo Representante')
+        elif acao == 'deletar':
+            # Para deletar, precisamos do id do morador dono do pedido, 
+            # ou criar uma função de deletar genérica.
+            # Vou usar uma alteração de status para "Removido" ou similar por segurança,
+            # ou buscar o id_morador. Vamos usar uma função de delete por ID apenas.
+            cursor_obj = conn.cursor()
+            cursor_obj.execute("DELETE FROM pedidos WHERE id_pedido = %s", (pedido_id,))
+            conn.commit()
+            cursor_obj.close()
+            
+        return redirect(url_for('painel_representante'))
+    else:
+        return redirect(url_for('unauthorized'))
+
+
+
+# -----------------------------
+# Rota do painel do gestor
 # -----------------------------
 @app.route('/painel-gestor', methods=['GET'])
 def painel_gestor():
@@ -136,25 +203,20 @@ def painel_gestor():
             return redirect(url_for('unauthorized'))
 
         # Obter parâmetros de filtro da URL (via request.args)
-        filtro_casa = request.args.get('casa', '') # Pega o valor, padrão vazio para "Todas as Casas"
-        filtro_categoria = request.args.get('categoria', '') # Padrão vazio para "Todas as Categorias"
-        filtro_status = request.args.get('status', '') # Padrão vazio para "Todos os Status"
-        ordenar_por = request.args.get('ordenar_por', 'recentes') # Padrão 'recentes'
+        filtro_casa = request.args.get('casa', '')
+        filtro_categoria = request.args.get('categoria', '')
+        filtro_status = request.args.get('status', '')
+        ordenar_por = request.args.get('ordenar_por', 'recentes')
 
-        # Chamar mostrar_pedidos_gestor com os filtros
         pedidos_tuplas = mostrar_pedidos_gestor(
-            filtro_casa=filtro_casa if filtro_casa else None, # Passa None se o filtro for vazio
+            filtro_casa=filtro_casa if filtro_casa else None,
             filtro_categoria=filtro_categoria if filtro_categoria else None,
             filtro_status=filtro_status if filtro_status else None,
             ordenar_por=ordenar_por
         )
         
-        # Converter as tuplas para dicionários
         pedidos_gestor = converter_pedidos_para_dicionario(pedidos_tuplas)
-
-        # Obter casas e categorias disponíveis para preencher os selects de filtro
         casas_disponiveis, categorias_disponiveis = obter_filtros_disponiveis()
-
         nome_usuario = session.get('username')
 
         return render_template(
@@ -204,8 +266,9 @@ def atualizar_pedido():
 @app.route('/deletar-pedido/<int:id_pedido>', methods=['POST'])
 def deletar_pedido_rota(id_pedido):
     if 'user_id' in session:
-        # Verifica se o usuário logado NÃO é um gestor
-        if verifica_gestor(session.get('username')):
+        # Verifica se o usuário logado NÃO é um gestor ou representante
+        username = session.get('username')
+        if verifica_gestor(username) or verifica_representante(username):
             return redirect(url_for('unauthorized'))
 
         id_morador = session.get('user_id')
@@ -238,7 +301,7 @@ def unauthorized():
 
 # -----------------------------
 # Execução da Aplicação
-# Inicia o servidor Flask em modo de depuração
 # -----------------------------
 if __name__ == '__main__':
-    app.run(debug=True) # Ativa o modo de depuração
+    from services.conexao import conn # Garantir que a conexão está disponível
+    app.run(debug=True)

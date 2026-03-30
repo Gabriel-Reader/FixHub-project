@@ -26,3 +26,10 @@ def verifica_gestor(nome_db):
         return True
     else:
         return False
+
+
+def verifica_representante(nome_db):
+    if str(nome_db) in ['representante']:
+        return True
+    else:
+        return False

@@ -8,7 +8,7 @@ def obter_dados_pedido():
     quarto = request.form.get('m_quarto').strip()
     descricao = request.form.get('m_descricao').strip()
     comentario_gestor = 'Nenhum comentário ainda.'.strip()
-    status = 'Aberto'.strip()
+    status = 'Aguardando Representante'.strip()
     id_morador = session.get('user_id')
 
     return [id_morador, casa, categoria, local, ala, quarto, descricao, comentario_gestor, status]
