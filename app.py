@@ -10,7 +10,7 @@ from utils.utilitarios import converter_pedidos_para_dicionario
 from utils.manipular_forms import obter_dados_pedido, obter_dados_cadastro, obter_dados_login, obter_atualizacao_pedido
 
 
-# Instanciação da aplicação Flask e configuração da chave secreta para sessões
+# Instanciação da aplicação Flask e configuração da chave s. para sessões
 app = Flask(__name__)
 app.secret_key = 'd2ccd1731dc1cca262d6c889e3352a921f973db9698cc4ba'
 
@@ -60,7 +60,6 @@ def tela_login():
 @app.route('/cadastro', methods=['GET', 'POST'])
 def tela_cadastro():
     if request.method == 'GET':
-        # Exibe o formulário de cadastro
         return render_template('cadastro.html')
 
     elif request.method == 'POST':
@@ -98,6 +97,10 @@ def tela_cadastro():
 @app.route('/painel-morador', methods=['GET', 'POST'])
 def painel_morador():
     if 'user_id' in session:
+        # Verifica se o usuário logado NÃO é um gestor
+        if verifica_gestor(session.get('username')):
+            return redirect(url_for('painel_gestor'))
+
         # Usuário autenticado
         if request.method == 'POST':
             # Criação de novo pedido
@@ -128,6 +131,10 @@ def painel_morador():
 @app.route('/painel-gestor', methods=['GET'])
 def painel_gestor():
     if 'user_id' in session:
+        # Verifica se o usuário logado é um gestor
+        if not verifica_gestor(session.get('username')):
+            return redirect(url_for('unauthorized'))
+
         # Obter parâmetros de filtro da URL (via request.args)
         filtro_casa = request.args.get('casa', '') # Pega o valor, padrão vazio para "Todas as Casas"
         filtro_categoria = request.args.get('categoria', '') # Padrão vazio para "Todas as Categorias"
@@ -174,6 +181,10 @@ def painel_gestor():
 def atualizar_pedido():
     if request.method == 'POST':
         if 'user_id' in session:
+            # Verifica se o usuário logado é um gestor
+            if not verifica_gestor(session.get('username')):
+                return redirect(url_for('unauthorized'))
+
             # Obtém dados do formulário de atualização
             novos_dados_pedido = obter_atualizacao_pedido()
             pedido_id, novo_status, novo_comentario = novos_dados_pedido
@@ -193,6 +204,10 @@ def atualizar_pedido():
 @app.route('/deletar-pedido/<int:id_pedido>', methods=['POST'])
 def deletar_pedido_rota(id_pedido):
     if 'user_id' in session:
+        # Verifica se o usuário logado NÃO é um gestor
+        if verifica_gestor(session.get('username')):
+            return redirect(url_for('unauthorized'))
+
         id_morador = session.get('user_id')
         deletar_pedido(id_pedido, id_morador)
         return redirect(url_for('painel_morador'))

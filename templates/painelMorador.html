@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Tela de Cadastro" />
+    <meta name="description" content="Portal do Morador" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/painelMorador.css') }}">
-    <!-- <link rel="stylesheet" href="painelMorador.css" type="text/css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <title>Portal do Morador</title>
 </head>
 
 <body>
+    <button id="darkmodeID">Modo Escuro</button>
 
     <header class="header-painel">
         <div class="info-usuario">
@@ -34,7 +35,6 @@
                 <div class="itens-linha">
                     <div class="item-formulario">
                         <label for="m_casa">Casa (CEU)</label>
-                        <!-- <input type="text" id="m_casa" name="m_casa" placeholder="ex: CEU 4" maxlength="10" required> -->
                         <select id="m_casa" name="m_casa" required>
                             <option value="{{ ceu_casa }}" selected>{{ ceu_casa }}</option>
                         </select>
@@ -166,6 +166,6 @@
 
     </section>
 
+    <script src="{{ url_for('static', filename='js/dark-mode.js') }}"></script>
 </body>
-
 </html>

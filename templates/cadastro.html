@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Tela de Cadastro" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <title>Página de Cadastro</title>
 </head>
 
 <body>
+    <button id="darkmodeID">Modo Escuro</button>
+
     <div class="cadastro-container">
         <div class="cartao-cadastro">
 
@@ -55,7 +58,6 @@
 
                     <div class="item-formulario">
                         <label for="c_casa">Casa (CEU)</label>
-                        <!-- <input type="text" id="c_casa" name="c_casa" placeholder="ex: CEU1" required> -->
                         <select id="c_casa" name="c_casa" required>
                             <option value="" disabled {% if not user_data %}selected{% endif %}>Selecione a casa...</option>
                             <option value="1" {% if user_data and user_data[4] == '1' %}selected{% endif %}>CEU 1</option>
@@ -80,6 +82,7 @@
 
         </div>
     </div>
-</body>
 
+    <script src="{{ url_for('static', filename='js/dark-mode.js') }}"></script>
+</body>
 </html>

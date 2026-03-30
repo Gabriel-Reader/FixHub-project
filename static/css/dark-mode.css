@@ -1,0 +1,124 @@
+/* =====================
+   Dark Mode
+   ===================== */
+
+body.dark-mode {
+    background-color: #1f2937;
+    color: #f4f4f5;
+}
+
+.dark-mode .cartao-login,
+.dark-mode .cartao-cadastro,
+.dark-mode .cartao-gestor,
+.dark-mode .cartao-morador,
+.dark-mode .pedidos-gestor,
+.dark-mode .cartao-pedido {
+    background-color: #374151;
+    border-color: #9ca3af;
+    box-shadow: 6px 6px 0px #9ca3af;
+}
+
+.dark-mode .cabecalho-login h1,
+.dark-mode .cabecalho-cartao h1,
+.dark-mode .cabecalho-section,
+.dark-mode h1, .dark-mode h3 {
+    color: #f4f4f5;
+}
+
+.dark-mode .cabecalho-login p,
+.dark-mode .cabecalho-cartao p {
+    color: #d1d5db;
+}
+
+.dark-mode .item-formulario label {
+    color: #d1d5db;
+}
+
+.dark-mode .item-formulario input,
+.dark-mode .item-formulario select,
+.dark-mode .textarea-comentario,
+.dark-mode .select-status,
+.dark-mode .filtro-select {
+    background-color: #4b5563;
+    border-color: #9ca3af;
+    color: #f4f4f5;
+}
+
+.dark-mode .item-formulario input::placeholder {
+    color: #9ca3af;
+}
+
+.dark-mode .btn,
+.dark-mode .btn-atualizar-pedido,
+.dark-mode .btn-enviarPedido {
+    background-color: #8b5cf6;
+    border-color: #9ca3af;
+    box-shadow: 4px 4px 0px #9ca3af;
+    color: #f4f4f5;
+}
+
+.dark-mode .btn:hover,
+.dark-mode .btn-atualizar-pedido:hover,
+.dark-mode .btn-enviarPedido:hover {
+    box-shadow: 2px 2px 0px #9ca3af;
+}
+
+.dark-mode .divider {
+    color: #9ca3af;
+}
+
+.dark-mode .divider::before, 
+.dark-mode .divider::after,
+.dark-mode .separador-bottom,
+.dark-mode .separador-top,
+.dark-mode .pedido-divisor {
+    background-color: #4b5563;
+}
+
+.dark-mode .btn-criarConta {
+    background-color: #374151;
+    border-color: #9ca3af;
+    color: #f4f4f5;
+    box-shadow: 4px 4px 0px #9ca3af;
+}
+
+.dark-mode .btn-criarConta:hover {
+    background-color: #4b5563;
+}
+
+.dark-mode .link-criarConta,
+.dark-mode .link-login,
+.dark-mode .logout-link,
+.dark-mode .greeting {
+    color: #f4f4f5;
+}
+
+.dark-mode .header-painel {
+    background-color: #1f2937;
+    border-bottom: 2px solid #9ca3af;
+}
+
+/* Design do Botão (Tamanho Reduzido) */
+#darkmodeID {
+    display: none; /* Desativado temporariamente */
+    position: fixed;
+    top: 0.75rem;
+    right: 0.75rem;
+    border: 2px solid #18181b;
+    border-radius: 0.5rem;
+    box-shadow: 3px 3px 0px #18181b;
+    background-color: #a78bfa;
+    color: #18181b;
+    font-weight: 700;
+    font-size: 0.8rem; /* Tamanho reduzido */
+    padding: 0.3rem 0.6rem; /* Tamanho reduzido */
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.dark-mode #darkmodeID {
+    background-color: #a78bfa;
+    border-color: #18181b;
+    box-shadow: 3px 3px 0px #18181b;
+    color: #18181b;
+}
